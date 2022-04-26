@@ -1,0 +1,49 @@
+.login-bg {
+  width: 100%;
+  min-height: 720px;
+  height: 100vh;
+  background: url(../../assets/images/loginBg.png) center no-repeat;
+  background-size: 100% 100%;
+  position: relative;
+  .login-content {
+      position: absolute;
+      width: 515px;
+      height: 526px;
+      padding: 0 68px;
+      right: 8%;
+      top: 20%;
+      background-color: #fff;
+      box-shadow: 0px 0px 20px 0px rgba(211, 221, 255, 0.25);
+      opacity: 0.96;
+      h2 {
+          font-size: 33px;
+          line-height: 33px;
+          margin: 45px 0 16px;
+          font-weight: 500;
+          color: #000;
+          text-align: left;
+      }
+      .button {
+          height: 44px;
+          line-height: 44px;
+          padding: 0;
+          width: 126px;
+          text-align: center;
+      }
+      .buttonPrimary {
+          background: linear-gradient(270deg, #3776bb 0%, #84c142 100%);
+      }
+      .buttonPrimary:hover {
+          background: linear-gradient(270deg, #84c142 0%, #3776bb 100%);
+      }
+  }
+  #footer {
+      position: absolute;
+      bottom: 17px;
+      left: 0;
+      width: 100%;
+      font-size: 12px;
+      color: #fff;
+      text-align: center;
+  }
+}
