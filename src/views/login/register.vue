@@ -79,8 +79,8 @@ export default {
   methods: {
     // 注册按钮操作
     handleRegister() {
-      this.$message.info("接口自己写o!");
-    },
+      this.$message.info("注册接口...");
+    }
   }
 };
 </script>

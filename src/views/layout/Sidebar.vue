@@ -74,7 +74,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import healthy_logo from 'assets/images/healthy_logo.png'
+import healthy_logo from "assets/images/healthy_logo.png";
 export default {
   data() {
     return {
@@ -240,7 +240,7 @@ export default {
       return this.$route.name;
     },
     roleId() {
-      return 2;
+      return 1;
     }
   }
 };

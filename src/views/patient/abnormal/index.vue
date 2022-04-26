@@ -2,12 +2,10 @@
   <div>
     <div class="app-header">
       <div class="allManager"><span>异常患者</span></div>
-       <el-button type="primary" size="small" 
-                >一键通知</el-button
-              >
+      <el-button type="primary" size="small">一键通知</el-button>
     </div>
     <div class="app-container calendar-list-container">
-     <el-table
+      <el-table
         :key="tableKey"
         :data="list"
         v-loading.body="listLoading"
@@ -38,7 +36,7 @@
         </el-table-column>
         <el-table-column align="center" label="住院信息">
           <template slot-scope="scope">
-            <el-button type="text" style="color:#000 !important">{{ scope.row.date }}</el-button>
+            <el-button type="text" style="color: #000 !important">{{ scope.row.date }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -89,10 +87,10 @@ export default {
       ],
       listQuery: {
         pageNumber: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       tableKey: 0
     };
-  },
+  }
 };
 </script>

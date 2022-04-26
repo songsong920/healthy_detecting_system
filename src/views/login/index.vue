@@ -41,7 +41,7 @@
               >登录</el-button
             >
           </el-form-item>
-       <div>没有账号？<el-button type="text" @click="handleRegister">注册账号</el-button></div>
+          <div>没有账号？<el-button type="text" @click="handleRegister">注册账号</el-button></div>
         </div>
       </div>
     </el-form>
@@ -89,9 +89,9 @@ export default {
         if (valid) {
           this.loading = true;
           let { mobilePhone, password } = this.loginForm;
-          if(mobilePhone && password){
+          if (mobilePhone && password) {
             this.loading = false;
-            localStorage.setItem('roleId',1)
+            localStorage.setItem("roleId", 1);
             this.$router.replace({
               path: "/"
             });
@@ -99,8 +99,8 @@ export default {
         }
       });
     },
-    handleRegister(){
-this.$router.push('/register');
+    handleRegister() {
+      this.$router.push("/register");
     }
   }
 };

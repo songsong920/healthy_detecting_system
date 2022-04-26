@@ -8,14 +8,14 @@ export const constantRouterMap = [{
   path: '/login',
   component: _import('login/index'),
   hidden: true,
-  name:'登录'
+  name: '登录'
 },
-  {
-    path: '/register',
-    component: _import('login/register'),
-    hidden: true,
-    name: '注册'
-  },
+{
+  path: '/register',
+  component: _import('login/register'),
+  hidden: true,
+  name: '注册'
+},
 {
   path: '/404',
   component: _import('error/404'),
@@ -24,8 +24,7 @@ export const constantRouterMap = [{
 {
   path: '*',
   redirect: '/404'
-  },
-// 个人信息
+},
 // 系统首页
 {
   path: '/',
@@ -44,7 +43,7 @@ export const constantRouterMap = [{
 {
   path: '/account',
   component: Layout,
-  redirect:'account',
+  redirect: 'account',
   children: [{
     path: 'account',
     component: _import('account/index'),
@@ -54,7 +53,7 @@ export const constantRouterMap = [{
     }
   }]
 },
-// 医生管理
+// 医生
 {
   path: '/doctor',
   component: Layout,
@@ -70,15 +69,15 @@ export const constantRouterMap = [{
       component: _import('doctor/myDoctor'),
       name: '医生栏目',
     },
-    
+
     {
       path: 'scheduling',
       component: _import('doctor/scheduling'),
       name: '医生排班',
     },
   ]
-  },
-// 患者管理
+},
+// 患者
 {
   path: '/patient',
   component: Layout,
@@ -125,23 +124,23 @@ export const constantRouterMap = [{
       name: '异常患者',
     }
   ]
-  },
-  // 药物系统
-  {
-    path: '/medicine',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'medicineManager',
-        component: _import('medicine/index'),
-        name: '药物系统',
-      },
-    ]
-  },
+},
+// 药物系统
+{
+  path: '/medicine',
+  component: Layout,
+  hidden: true,
+  children: [
+    {
+      path: 'medicineManager',
+      component: _import('medicine/index'),
+      name: '药物系统',
+    },
+  ]
+},
 ]
 export default new Router({
-  mode: 'history', 
+  mode: 'history',
   scrollBehavior: () => ({
     y: 0
   }),

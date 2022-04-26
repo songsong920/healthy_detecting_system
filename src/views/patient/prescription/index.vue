@@ -4,7 +4,7 @@
       <div class="allManager"><span>处方管理</span></div>
     </div>
     <div class="app-container calendar-list-container">
-     <el-table
+      <el-table
         :key="tableKey"
         :data="list"
         v-loading.body="listLoading"
@@ -30,7 +30,7 @@
         </el-table-column>
         <el-table-column align="center" label="处方状态">
           <template slot-scope="scope">
-            <span>{{ scope.row.status ==1?'已取药':'未取药'}}</span>
+            <span>{{ scope.row.status == 1 ? "已取药" : "未取药" }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="140">
@@ -58,11 +58,22 @@
         width="450px"
       >
         <el-form :model="form" :rules="rules" ref="form" label-width="90px">
-                 <el-form-item label="状态" prop='status'>
-          <el-select class="filter-item" v-model="form.status" placeholder="请选择状态" style="width:100%" size="small">
-            <el-option v-for="item in statusOptions" :key="item.id" :label="item.label" :value="item.id"/>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-select
+              class="filter-item"
+              v-model="form.status"
+              placeholder="请选择状态"
+              style="width: 100%"
+              size="small"
+            >
+              <el-option
+                v-for="item in statusOptions"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="cancel('form')" size="small">取 消</el-button>
@@ -92,14 +103,14 @@
 export default {
   data() {
     return {
-      statusOptions:[
+      statusOptions: [
         {
-          id:1,
-          label:'已取药'
+          id: 1,
+          label: "已取药"
         },
         {
-          id:2,
-          label:'未取药'
+          id: 2,
+          label: "未取药"
         }
       ],
       list: [

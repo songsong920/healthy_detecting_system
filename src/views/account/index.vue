@@ -1,9 +1,15 @@
 <template>
   <div class="table-box">
-    <span style="font-size:18px;font-weight:600">个人信息</span>
-      <el-button size="small" type="primary" @click="handleUpdate" style="float :right;margin-bottom:15px;margin-left:15px" icon="el-icon-edit">修改信息</el-button>
-    <table class="table-body"  style="position:relative">
-      
+    <span style="font-size: 18px; font-weight: 600">个人信息</span>
+    <el-button
+      size="small"
+      type="primary"
+      @click="handleUpdate"
+      style="float: right; margin-bottom: 15px; margin-left: 15px"
+      icon="el-icon-edit"
+      >修改信息</el-button
+    >
+    <table class="table-body" style="position: relative">
       <tr class="tr-body">
         <div class="td-box">
           <td class="td-key">姓名</td>
@@ -13,31 +19,31 @@
       <tr class="tr-body">
         <div class="td-box">
           <td class="td-key">性别</td>
-          <td class="td-value" >男</td>
+          <td class="td-value">男</td>
         </div>
       </tr>
       <tr class="tr-body">
         <div class="td-box">
           <td class="td-key">年龄</td>
-          <td class="td-value" >18</td>
+          <td class="td-value">18</td>
         </div>
       </tr>
       <tr class="tr-body">
         <div class="td-box">
           <td class="td-key">联系方式</td>
-          <td class="td-value" >13899999999</td>
+          <td class="td-value">13899999999</td>
         </div>
       </tr>
       <tr class="tr-body">
         <div class="td-box">
           <td class="td-key">职工号</td>
-          <td class="td-value" >1433223</td>
+          <td class="td-value">1433223</td>
         </div>
       </tr>
-       <tr class="tr-body">
+      <tr class="tr-body">
         <div class="td-box">
           <td class="td-key">科室</td>
-          <td class="td-value" >外科</td>
+          <td class="td-value">外科</td>
         </div>
       </tr>
       <tr class="tr-body">
@@ -52,7 +58,7 @@
           <td class="td-value">520222199844444444</td>
         </div>
       </tr>
-        <tr class="tr-body">
+      <tr class="tr-body">
         <div class="td-box">
           <td class="td-key">入职时间</td>
           <td class="td-value">2022-4-26</td>
@@ -67,7 +73,13 @@
     >
       <el-form :model="form" :rules="rules" ref="form" label-width="90px">
         <el-form-item label="医生姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入医生姓名" style="width:100%" maxlength="50" size="small"></el-input>
+          <el-input
+            v-model="form.name"
+            placeholder="请输入医生姓名"
+            style="width: 100%"
+            maxlength="50"
+            size="small"
+          ></el-input>
         </el-form-item>
         <el-form-item label="医生性别" prop="sex">
           <el-radio-group v-model="form.sex">
@@ -77,17 +89,24 @@
               :key="item.value"
               v-for="item in sexOptions"
               size="small"
-            >{{item.desc}}</el-radio>
+              >{{ item.desc }}</el-radio
+            >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="医生编号" prop="numberNo">
-          <el-input v-model="form.numberNo" placeholder="请输入医生编号" style="width:100%" maxlength="20" size="small"></el-input>
+          <el-input
+            v-model="form.numberNo"
+            placeholder="请输入医生编号"
+            style="width: 100%"
+            maxlength="20"
+            size="small"
+          ></el-input>
         </el-form-item>
         <el-form-item label="联系方式" prop="mobilePhone">
           <el-input
             v-model="form.mobilePhone"
             placeholder="请输入手机号码"
-            style="width:100%"
+            style="width: 100%"
             maxlength="11"
             minlength="11"
             size="small"
@@ -100,14 +119,16 @@
             value-format="yyyy-MM-dd"
             format="yyyy-MM-dd"
             placeholder="选择日期"
-            style="width:100%"
+            style="width: 100%"
             size="small"
           ></el-date-picker>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer" >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="cancel('form')" size="small">取 消</el-button>
-        <el-button type="primary" @click="update('form')" :loading="loading" size="small">{{loadingText}}</el-button>
+        <el-button type="primary" @click="update('form')" :loading="loading" size="small">{{
+          loadingText
+        }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -167,8 +188,8 @@ export default {
             trigger: "blur"
           }
         ],
-        status:[
-           {
+        status: [
+          {
             required: true,
             message: "请选择医生状态",
             trigger: "blur"
@@ -177,10 +198,10 @@ export default {
       },
       list: null,
       total: null,
-      loading:false,
-      loadingText:'确 定',
+      loading: false,
+      loadingText: "确 定",
       listLoading: false,
-      listQuery: { },
+      listQuery: {},
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
@@ -189,10 +210,8 @@ export default {
       tableKey: 0
     };
   },
-  created(){
-  },
+  created() {},
   methods: {
-   
     //编辑按钮操作
     handleUpdate() {
       this.dialogFormVisible = true;
@@ -202,17 +221,17 @@ export default {
       this.dialogFormVisible = false;
       this.$refs[formName].resetFields();
     },
-     //编辑信息
-     update(formName) {
+    //编辑信息
+    update(formName) {
       const set = this.$refs;
-      set[formName].validate(valid => {
+      set[formName].validate((valid) => {
         if (valid) {
-          this.loading = true
-          this.loadingText = '保存中...'
+          this.loading = true;
+          this.loadingText = "保存中...";
           // 编辑接口
-        } 
+        }
       });
-    },
+    }
   }
 };
 </script>

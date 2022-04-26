@@ -2,12 +2,10 @@
   <div>
     <div class="app-header">
       <div class="allManager"><span>健康数据统计</span></div>
-       <el-button type="primary" size="small" 
-                >数据保存</el-button
-              >
+      <el-button type="primary" size="small">数据保存</el-button>
     </div>
     <div class="app-container calendar-list-container">
-     <el-table
+      <el-table
         :key="tableKey"
         :data="list"
         v-loading.body="listLoading"
@@ -43,7 +41,9 @@
         </el-table-column>
         <el-table-column align="center" label="体温">
           <template slot-scope="scope">
-            <el-button type="text" style="color:#000 !important">{{ scope.row.temperature?scope.row.temperature:'0' }}℃</el-button>
+            <el-button type="text" style="color: #000 !important"
+              >{{ scope.row.temperature ? scope.row.temperature : "0" }}℃</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -56,15 +56,15 @@ export default {
   data() {
     return {
       list: [
-         {
+        {
           name: "患者1",
           sex: "男",
           mobilePhone: "13655555555",
           idCard: "522422199800114456",
           date: "2022-4-25",
-          bloodPressure:'111',
-          pulse:'100',
-          temperature:'37'
+          bloodPressure: "111",
+          pulse: "100",
+          temperature: "37"
         },
         {
           name: "患者2",
@@ -72,9 +72,9 @@ export default {
           mobilePhone: "13655555555",
           idCard: "522422199800114456",
           date: "2022-4-25",
-          bloodPressure:'111',
-          pulse:'100',
-          temperature:'37'
+          bloodPressure: "111",
+          pulse: "100",
+          temperature: "37"
         },
         {
           name: "患者3",
@@ -82,9 +82,9 @@ export default {
           mobilePhone: "13655555555",
           idCard: "522422199800114456",
           date: "2022-4-25",
-          bloodPressure:'111',
-          pulse:'100',
-          temperature:'36'
+          bloodPressure: "111",
+          pulse: "100",
+          temperature: "36"
         },
         {
           name: "患者4",
@@ -92,9 +92,9 @@ export default {
           mobilePhone: "13655555555",
           idCard: "522422199800114456",
           date: "2022-4-25",
-          bloodPressure:'111',
-          pulse:'100',
-          temperature:'34'
+          bloodPressure: "111",
+          pulse: "100",
+          temperature: "34"
         },
         {
           name: "患者5",
@@ -102,13 +102,13 @@ export default {
           mobilePhone: "13655555555",
           idCard: "522422199800114456",
           date: "2022-4-25",
-          bloodPressure:'111',
-          pulse:'100',
-          temperature:'38'
+          bloodPressure: "111",
+          pulse: "100",
+          temperature: "38"
         }
       ],
       tableKey: 0
     };
-  },
+  }
 };
 </script>

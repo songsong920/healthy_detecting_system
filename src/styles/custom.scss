@@ -292,14 +292,6 @@ body .el-table colgroup.gutter {
     /*滚动条的背景颜色*/
 }
 
-// 升序降序
-.el-table .descending .sort-caret.descending {
-    border-top-color: #377BE9 !important;
-}
-
-.el-table .ascending .sort-caret.ascending {
-    border-bottom-color: #377BE9 !important;
-}
 
 .el-year-table td.today .cell {
     color: #377BE9 !important
@@ -309,39 +301,6 @@ body .el-table colgroup.gutter {
 .el-year-table td.current:not(.disabled) .cell {
     color: #377BE9 !important
 }
-
-.el-tabs--border-card>.el-tabs__header {
-    border-bottom: 0 !important;
-    background: #F7F8FA !important;
-}
-
-.el-tabs--border-card>.el-tabs__header .el-tabs__item {
-    border-top: 3px solid #F7F8FA !important;
-    border-left: 1px solid #E7E7E7 !important;
-}
-
-.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
-    color: #377BE9 !important;
-    border-top-color: #377BE9 !important;
-}
-
-.el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
-    color: #377BE9 !important;
-}
-
-.el-tabs--left.el-tabs--card .el-tabs__item.is-left {
-    padding-left: 15px !important;
-    text-align: center !important;
-    padding-right: 15px !important;
-    background: rgba(247, 248, 250, 1) !important;
-}
-
-.el-tabs--left.el-tabs--card .el-tabs__item.is-left.is-active {
-    color: #377BE9 !important;
-    border-left: 2px solid #377BE9 !important;
-    background: #fff !important;
-}
-
 .el-time-spinner__item.active:not(.disabled) {
     color: #377BE9 !important;
 }
@@ -362,38 +321,4 @@ body .el-table colgroup.gutter {
 
 .el-date-table td.current:not(.disabled) span {
     background-color: #377BE9 !important;
-}
-
-// .el-table {
-//     padding-left: 15px !important;
-//     padding-right: 15px !important;
-// }
-
-.el-tabs--border-card {
-    border: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-}
-
-.el-tabs--border-card>.el-tabs__content {
-    padding: 0 !important;
-}
-
-.el-dialog__header {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-}
-.el-tabs--border-card>.el-tabs__header .el-tabs__item {
-  border-bottom: 2px solid #fff !important;
-  border-right: none !important;
-  border-left: none !important;
-  border-top: none !important;
-}
-
-.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
-  color: #377BE9 !important;
-  border-bottom-color: #377BE9 !important;
-}
-
-.el-tabs--border-card>.el-tabs__header .el-tabs__item:not(.is-disabled):hover {
-  color: #377BE9 !important;
 }

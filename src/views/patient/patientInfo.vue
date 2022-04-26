@@ -23,7 +23,7 @@
             size="small"
             clearable
             @keyup.enter.native="handleFilter"
-            style="width: 180px; "
+            style="width: 180px"
           >
           </el-input>
         </el-form-item>
@@ -34,15 +34,13 @@
             size="small"
             clearable
             @keyup.enter.native="handleFilter"
-            style="width: 180px;"
+            style="width: 180px"
           >
           </el-input>
-          <el-button type="primary" size="small" @click="handleFilter" 
-                >查询</el-button
-              >
+          <el-button type="primary" size="small" @click="handleFilter">查询</el-button>
         </el-form-item>
       </el-form>
-     <el-table
+      <el-table
         :key="tableKey"
         :data="list"
         v-loading.body="listLoading"
@@ -304,7 +302,7 @@ export default {
       const set = this.$refs;
       set[formName].validate((valid) => {
         if (valid) {
-          this.$message.info('新增接口')
+          this.$message.info("新增接口");
         }
       });
     },
@@ -318,7 +316,7 @@ export default {
       const set = this.$refs;
       set[formName].validate((valid) => {
         if (valid) {
-          this.$message.info('编辑接口')
+          this.$message.info("编辑接口");
         }
       });
     }
