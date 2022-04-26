@@ -6,8 +6,7 @@
           <div>健康状态监测系统</div>
         </div>
         <router-link v-else key="expand" class="sidebar-logo-link" to="#" :title="areaName">
-          <span class="sidebar-logo">健康</span>
-          <!-- <img :src="logoX" style="width: 32px" class="sidebar-logo" /> -->
+          <img :src="healthy_logo" style="width: 32px" class="sidebar-logo" />
         </router-link>
       </transition>
     </div>
@@ -75,9 +74,11 @@
 
 <script>
 import { mapGetters } from "vuex";
+import healthy_logo from 'assets/images/healthy_logo.png'
 export default {
   data() {
     return {
+      healthy_logo,
       patientMenus: [
         {
           children: [],
