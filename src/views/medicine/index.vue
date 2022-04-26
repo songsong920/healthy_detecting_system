@@ -149,7 +149,7 @@
 
 <script>
 export default {
-  name: "Doctor",
+  name: "Medicine",
   data() {
     return {
       list: [

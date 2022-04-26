@@ -302,7 +302,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        //  删除接口
+        this.$message.info('删除接口...')
       });
     },
     // 查询
@@ -315,9 +315,7 @@ export default {
       const set = this.$refs;
       set[formName].validate((valid) => {
         if (valid) {
-          this.loading = true;
-          this.loadingText = "保存中...";
-          // 新增接口
+          this.$message.info('新增接口...')
         }
       });
     },
@@ -331,9 +329,7 @@ export default {
       const set = this.$refs;
       set[formName].validate((valid) => {
         if (valid) {
-          this.loading = true;
-          this.loadingText = "保存中...";
-          // 编辑接口
+          this.$message.info('编辑接口...')
         }
       });
     }

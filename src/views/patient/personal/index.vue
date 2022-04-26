@@ -119,7 +119,6 @@
 </template>
 <script>
 export default {
-  name: "Account",
   data() {
     return {
       statusOptions: [

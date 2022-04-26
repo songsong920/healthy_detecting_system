@@ -90,7 +90,6 @@
 
 <script>
 export default {
-  name: "Doctor",
   data() {
     return {
       statusOptions:[
