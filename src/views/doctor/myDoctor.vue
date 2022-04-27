@@ -2,9 +2,22 @@
   <div>
     <div class="app-header">
       <div class="allManager"><span>医生栏目</span></div>
-      <el-button size="small" type="primary" @click="handleCreate">自主选择医生</el-button>
     </div>
     <div class="app-container calendar-list-container">
+      <el-form :model="listQuery" :inline="true" @submit.native.prevent>
+        <el-form-item>
+          <el-input
+            placeholder="请输入医生姓名"
+            v-model="listQuery.name"
+            size="small"
+            clearable
+            @keyup.enter.native="handleFilter"
+            style="width: 180px;margin-left:15px"
+          >
+          </el-input>
+          <el-button type="primary" size="small" @click="handleFilter">查询</el-button>
+        </el-form-item>
+      </el-form>
       <el-table
         :key="tableKey"
         :data="list"
@@ -16,7 +29,7 @@
       >
         <el-table-column align="center" label="医生名称">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <el-button type="text" @click="handleDetail(scope.row)">{{ scope.row.name }}</el-button><span v-if="scope.row.select==1">(我的医生)</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="医生性别">
@@ -34,19 +47,24 @@
             <span>{{ scope.row.idCard }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="200">
+        <el-table-column align="center" label="操作" width="140">
           <template slot-scope="scope">
             <el-button type="text" @click="handleUpdate(scope.row)">编辑</el-button>
-            <span style="color: #cbcbcb">|</span>
-            <el-button
-              type="text"
-              @click="handleDelete(scope.row)"
-              style="color: #e8505b !important"
-              >删除</el-button
-            >
           </template>
         </el-table-column>
       </el-table>
+       <div v-show="!listLoading" class="pagination-container">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="listQuery.pageNumber"
+          :page-sizes="[10, 20, 30, 40, 50]"
+          :page-size="listQuery.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          background
+        ></el-pagination>
+      </div>
       <el-dialog
         :title="textMap[dialogStatus]"
         :visible.sync="dialogFormVisible"
@@ -118,7 +136,8 @@ export default {
           date: "2022-4-25",
           bloodPressure: "111",
           pulse: "100",
-          temperature: "37"
+          temperature: "37",
+          select:1
         },
         {
           name: "钱医生",
@@ -163,6 +182,9 @@ export default {
       ],
       tableKey: 0,
       form: {},
+      listQuery:{
+        name:undefined,
+      },
       rules: {
         status: [
           {
@@ -179,12 +201,15 @@ export default {
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        update: "编辑状态",
-        create: "添加患者"
+        update: "编辑医生",
+        create: "选择医生"
       }
     };
   },
   methods: {
+    // 分页
+    handleSizeChange() {},
+    handleCurrentChange() {},
     // 自主选择按钮操作
     handleCreate(row) {
       this.dialogFormVisible = true;
@@ -194,6 +219,14 @@ export default {
     handleUpdate(row) {
       this.dialogFormVisible = true;
       this.dialogStatus = "update";
+    },
+    // 医生详情
+    handleDetail(){
+      this.$router.push('/patient/doctorSelect')
+    },
+    // 查询
+    handleFilter(){
+      this.$message.info('查询接口')
     },
     // 返回
     cancel(formName) {

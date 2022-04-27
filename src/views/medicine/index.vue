@@ -4,7 +4,7 @@
       <div class="allManager"><span>药物系统</span></div>
       <div>
         <el-button icon="el-icon-plus" size="small" @click="handleCreate" type="primary"
-          >用药清单</el-button
+          >添加药物</el-button
         >
       </div>
     </div>
@@ -83,42 +83,39 @@
         :close-on-click-modal="false"
         width="450px"
       >
-        <el-form :model="form" :rules="rules" ref="form" label-width="90px">
-          <el-form-item label="就诊卡号" prop="name">
+        <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+          <el-form-item label="药物名称" prop="name">
             <el-input
               v-model="form.name"
-              placeholder="请输入就诊卡号"
+              placeholder="请输入药物名称"
               style="width: 100%"
               maxlength="10"
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="药物" prop="remark">
+          <el-form-item label="编号" prop="remark">
             <el-input
               v-model="form.remark"
-              placeholder="请输入添加药物"
+              placeholder="请输入编号"
               style="width: 100%"
               maxlength="15"
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="数量" prop="remark">
+          <el-form-item label="库存" prop="remark">
             <el-input
               v-model="form.remark"
-              placeholder="请输入数量"
+              placeholder="请输入库存数量"
               style="width: 100%"
               maxlength="15"
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="用药剂量" prop="remark">
-            <el-input
-              v-model="form.remark"
-              placeholder="请输入具体用药剂量"
-              style="width: 100%"
-              maxlength="15"
-              size="small"
-            ></el-input>
+          <el-form-item label="是否有库存" prop="kucun">
+            <el-radio-group v-model="form.sex" style="margin-bottom: -10px">
+              <el-radio label="1">是</el-radio>
+              <el-radio label="2" style="margin-left: 30px">否</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -190,45 +187,24 @@ export default {
       form: {},
       rules: {
         name: [
-          { required: true, message: "姓名不能为空", trigger: "blur" },
+          { required: true, message: "药物名不能为空", trigger: "blur" },
           { max: 50, message: "最大长度为50个字符", trigger: "blur" },
-          {
-            required: true,
-            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
-            message: "姓名不支持特殊字符",
-            trigger: "blur"
-          }
         ],
         stock: [
           {
             required: true,
-            message: "请选择药物性别",
+            message: "请输入药物编号",
             trigger: "blur"
           }
         ],
         remark: [
           {
             required: true,
-            message: "药物编号不能为空",
+            message: "库存不能为空",
             trigger: "blur"
           }
         ],
-        mobilePhone: [
-          { required: true, message: "联系方式不能为空", trigger: "blur" },
-          {
-            required: true,
-            pattern: /^1[3456789]\d{9}$/,
-            message: "请输入11位正确的电话号码",
-            trigger: "blur"
-          }
-        ],
-        date: [
-          {
-            required: true,
-            message: "请选择药物入职日期",
-            trigger: "blur"
-          }
-        ]
+        kucun: [{ required: true, message: "是否有库存不能为空", trigger: "blur" }]
       },
       total: 0,
       loading: false,
@@ -242,8 +218,8 @@ export default {
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        update: "编辑用药清单",
-        create: "添加用药清单"
+        update: "编辑药物",
+        create: "添加药物"
       },
       tableKey: 0
     };

@@ -55,6 +55,8 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
+        this.$refs.child.closeAllTags(); // 子组件$on中的名字
+        location.reload()
         localStorage.removeItem("roleId");
         localStorage.removeItem("roleName");
         window.location.replace(`/login`);

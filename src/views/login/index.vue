@@ -91,10 +91,22 @@ export default {
           let { mobilePhone, password } = this.loginForm;
           if (mobilePhone && password) {
             this.loading = false;
-            localStorage.setItem("roleId", 1);
-            this.$router.replace({
-              path: "/"
-            });
+            // localStorage.setItem("roleId", 1);
+            // localStorage.setItem("roleId", 2);
+            localStorage.setItem("roleId", 3);
+            if(localStorage.getItem('roleId') == 1){ 
+              this.$router.replace({
+               path: "/admin"
+             });
+            }else if(localStorage.getItem('roleId') ==2){
+              this.$router.replace({
+               path: "/doctor"
+             });
+            }else{
+              this.$router.replace({
+               path: "/patient"
+             });
+            }
           }
         }
       });

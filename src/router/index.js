@@ -24,56 +24,68 @@ export const constantRouterMap = [{
 {
   path: '*',
   redirect: '/404'
-},
-// 系统首页
+  },
+
+// 管理员
 {
-  path: '/',
-  component: Layout,
-  redirect: 'home',
-  children: [{
-    path: 'home',
-    component: _import('homepage/index'),
-    name: '系统首页',
-    meta: {
-      parent: true
-    }
-  }]
-},
-// 个人信息
-{
-  path: '/account',
-  component: Layout,
-  redirect: 'account',
-  children: [{
-    path: 'account',
-    component: _import('account/index'),
-    name: '个人信息',
-    meta: {
-      parent: true
-    }
-  }]
-},
-// 医生
-{
-  path: '/doctor',
+  path: '/admin',
   component: Layout,
   hidden: true,
+  redirect: 'admin/statistics',
   children: [
+    {
+      path: 'statistics',
+      component: _import('patient/statistics/index'),
+      name: '数据统计',
+    },
+    {
+      path: 'abnormal',
+      component: _import('patient/abnormal/index'),
+      name: '异常患者',
+    },
+    {
+      path: 'patientManager',
+      component: _import('patient/index'),
+      name: '患者管理',
+    },
     {
       path: 'doctorManager',
       component: _import('doctor/index'),
       name: '医生管理',
     },
     {
-      path: 'myDoctor',
-      component: _import('doctor/myDoctor'),
-      name: '医生栏目',
-    },
-
-    {
       path: 'scheduling',
       component: _import('doctor/scheduling'),
       name: '医生排班',
+    },
+  ]
+  },
+// 医生
+{
+  path: '/doctor',
+  component: Layout,
+  hidden: true,
+  redirect:'doctor/account',
+  children: [
+    {
+      path: 'account',
+      component: _import('doctor/account'),
+      name: '个人信息',
+    },
+        {
+      path: 'patientInfo',
+      component: _import('patient/patientInfo'),
+      name: '患者信息',
+    },
+    {
+      path: 'alarmInfo',
+      component: _import('patient/alarm/index'),
+      name: '告警信息',
+    },
+    {
+      path: 'medicineManager',
+      component: _import('medicine/index'),
+      name: '药物系统',
     },
   ]
 },
@@ -82,26 +94,12 @@ export const constantRouterMap = [{
   path: '/patient',
   component: Layout,
   hidden: true,
+  redirect:"patient/personalInfo",
   children: [
-    {
-      path: 'patientManager',
-      component: _import('patient/index'),
-      name: '患者管理',
-    },
-    {
-      path: 'patientInfo',
-      component: _import('patient/patientInfo'),
-      name: '患者信息',
-    },
     {
       path: 'personalInfo',
       component: _import('patient/personal/index'),
       name: '个人详情',
-    },
-    {
-      path: 'alarmInfo',
-      component: _import('patient/alarm/index'),
-      name: '告警信息',
     },
     {
       path: 'prescription',
@@ -114,31 +112,20 @@ export const constantRouterMap = [{
       name: '每日上报',
     },
     {
-      path: 'statistics',
-      component: _import('patient/statistics/index'),
-      name: '患者统计',
+      path: 'myDoctor',
+      component: _import('doctor/myDoctor'),
+      name: '医生栏目',
     },
     {
-      path: 'abnormal',
-      component: _import('patient/abnormal/index'),
-      name: '异常患者',
-    }
-  ]
-},
-// 药物系统
-{
-  path: '/medicine',
-  component: Layout,
-  hidden: true,
-  children: [
-    {
-      path: 'medicineManager',
-      component: _import('medicine/index'),
-      name: '药物系统',
+      path: 'docSelect',
+      component: _import('doctor/doctorSelect'),
+      name: '选择医生',
     },
   ]
-},
+  },
 ]
+
+
 export default new Router({
   mode: 'history',
   scrollBehavior: () => ({

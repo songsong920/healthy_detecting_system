@@ -1,6 +1,6 @@
 <template>
 
-  <section class="app-main" style="min-height: 100%;background:#F0F3F7">
+  <section class="app-main" style="min-height: 100%;background:rgb(198,212,207)">
     <transition name="fade" mode="out-in">
       <!-- <keep-alive> -->
       <router-view :key="key"></router-view>

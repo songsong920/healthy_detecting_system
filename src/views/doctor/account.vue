@@ -1,71 +1,46 @@
 <template>
-  <div class="table-box">
-    <span style="font-size: 18px; font-weight: 600">个人信息</span>
-    <el-button
-      size="small"
-      type="primary"
-      @click="handleUpdate"
-      style="float: right; margin-bottom: 15px; margin-left: 15px"
-      icon="el-icon-edit"
-      >修改信息</el-button
-    >
-    <table class="table-body" style="position: relative">
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">姓名</td>
-          <td class="td-value">张三</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">性别</td>
-          <td class="td-value">男</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">年龄</td>
-          <td class="td-value">18</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">联系方式</td>
-          <td class="td-value">13899999999</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">职工号</td>
-          <td class="td-value">1433223</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">科室</td>
-          <td class="td-value">外科</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">证件类型</td>
-          <td class="td-value">居民身份证</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">证件号码</td>
-          <td class="td-value">520222199844444444</td>
-        </div>
-      </tr>
-      <tr class="tr-body">
-        <div class="td-box">
-          <td class="td-key">入职时间</td>
-          <td class="td-value">2022-4-26</td>
-        </div>
-      </tr>
-    </table>
-    <el-dialog
+  <div class="account-page">
+    <div class="container">
+      <div class="title">
+        <div class='title-person'>个人信息</div>
+        <el-button type="primary" size="small" @click="handleUpdate">修改信息</el-button>
+      </div>
+        <div class="pageInfo">
+          <div class="list">
+            <span class="item-name">姓名：</span>
+            <span class="item-number">张三</span>
+          </div>
+          <div class="list">
+            <span class="item-name">性别：</span>
+            <span class="item-number">男</span>
+          </div>
+          <div class="list">
+            <span class="item-name">医生职工号：</span>
+            <span class="item-number">1433223</span>
+          </div>
+          <div class="list">
+            <span class="item-name">年龄：</span>
+            <span class="item-number">20</span>
+          </div>
+          <div class="list">
+            <span class="item-name">科室：</span>
+            <span class="item-number">外科</span>
+          </div>
+          <div class="list">
+            <span class="item-name">学历：</span>
+            <span class="item-number">本科</span>
+          </div>
+          <div class="list">
+            <span class="item-name">证件类型：</span>
+            <span class="item-number">居民身份证</span>
+          </div>
+          <div class="list">
+            <span class="item-name">证件号码：</span>
+            <span class="item-number">52247855555555</span>
+          </div>
+          
+      </div>
+ <el-dialog
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
@@ -132,10 +107,10 @@
       </div>
     </el-dialog>
   </div>
+  </div>
 </template>
 <script>
 export default {
-  name: "Account",
   data() {
     return {
       sexOptions: [
@@ -143,6 +118,7 @@ export default {
         { value: "2", desc: "女" }
       ],
       form: {},
+      binding:false,
       rules: {
         name: [
           { required: true, message: "姓名不能为空", trigger: "blur" },
@@ -196,12 +172,9 @@ export default {
           }
         ]
       },
-      list: null,
-      total: null,
       loading: false,
       loadingText: "确 定",
       listLoading: false,
-      listQuery: {},
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
@@ -235,52 +208,35 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-#qrcode {
-  width: 196px;
-  height: 196px;
-  margin: 8px auto 0px;
-  >>> iframe {
-    height: 196px;
-    width: 196px;
+<style scoped lang='scss'>
+.account-page{
+  height: calc(100vh - 56px);
+  padding: 16px;
+  .title{
+    display: flex;
+    padding: 15px;
+    justify-content: space-between;
+    .title-person{
+      margin-top: 5px;
+      font-size: 18px;
+    }
   }
-}
-.el-table .warning-row {
-  background: oldlace;
-}
-
-.el-table .success-row {
-  background: #f0f9eb;
-}
-.table-box {
-  padding: 15px;
-  .table-body {
-    width: 100%;
-    border: 0.5px solid #000;
-    .tr-body {
+  .container{
+    height: 100%;
+    overflow: auto;
+    background: #fff;
+    border-radius: 16px;
+    .pageInfo{
       display: flex;
-      border-bottom: 1px solid #000 !important;
-      &:last-child {
-        border-bottom: 0 !important ;
-      }
-      .td-box {
-        display: flex;
-        border-left: 1px solid #000;
-        &:first-child {
-          border-left: 0;
-        }
-        .td-key {
-          width: 200px;
-          padding: 10px;
-          line-height: 20px;
-          text-align: center;
-          background-color: rgba(242, 242, 242, 1);
-          border-right: 1px solid #000;
-        }
-        .td-value {
-          flex: 1 0;
-          line-height: 20px;
-          padding: 10px 20px;
+      flex-wrap: wrap;
+      padding: 15px;
+      .list{
+        width: 50%;
+        height: 36px;
+        height: 36px;
+        font-size: 16px;
+        .item-name{
+          font-weight: bold;
         }
       }
     }

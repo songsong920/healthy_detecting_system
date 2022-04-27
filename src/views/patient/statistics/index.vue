@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="app-header">
-      <div class="allManager"><span>健康数据统计</span></div>
+      <div class="allManager"><span>数据统计</span></div>
       <el-button type="primary" size="small">数据保存</el-button>
     </div>
     <div class="app-container calendar-list-container">
@@ -107,7 +107,8 @@ export default {
           temperature: "38"
         }
       ],
-      tableKey: 0
+      tableKey: 0,
+      listLoading:false
     };
   }
 };

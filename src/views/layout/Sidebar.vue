@@ -17,7 +17,7 @@
         mode="vertical"
         unique-opened
         active-text-color="#fff"
-        background-color="#293045"
+        background-color="rgb(141,171,158)"
         text-color="#fff"
         menu-trigger="click"
         :collapse="isCollapse"
@@ -82,25 +82,17 @@ export default {
       patientMenus: [
         {
           children: [],
-          code: "home",
-          icon: "homepage",
-          id: 2,
-          title: "系统首页",
-          type: "menu"
-        },
-        {
-          children: [],
           code: "patient/personalInfo",
           icon: "student",
-          id: 2,
+          id: 1,
           title: "个人详情",
           type: "menu"
         },
         {
           children: [],
-          code: "doctor/myDoctor",
+          code: "patient/myDoctor",
           icon: "password",
-          id: 6,
+          id: 2,
           title: "医生栏目",
           type: "menu"
         },
@@ -108,7 +100,7 @@ export default {
           children: [],
           code: "patient/prescription",
           icon: "service",
-          id: 8,
+          id: 3,
           title: "处方管理 ",
           type: "menu"
         },
@@ -116,7 +108,7 @@ export default {
           children: [],
           code: "patient/dailyReport",
           icon: "signup",
-          id: 8,
+          id: 4,
           title: "每日上报",
           type: "menu"
         }
@@ -124,23 +116,15 @@ export default {
       doctorMenus: [
         {
           children: [],
-          code: "home",
-          icon: "homepage",
-          id: 2,
-          title: "系统首页",
-          type: "menu"
-        },
-        {
-          children: [],
-          code: "account",
+          code: "doctor/account",
           icon: "student",
-          id: 3,
+          id: 1,
           title: "个人信息",
           type: "menu"
         },
         {
           children: [],
-          code: "patient/patientInfo",
+          code: "doctor/patientInfo",
           icon: "signup",
           id: 2,
           title: "患者信息",
@@ -148,17 +132,17 @@ export default {
         },
         {
           children: [],
-          code: "patient/alarmInfo",
+          code: "doctor/alarmInfo",
           icon: "password",
-          id: 5,
+          id: 3,
           title: "告警信息",
           type: "menu"
         },
         {
           children: [],
-          code: "medicine/medicineManager",
+          code: "doctor/medicineManager",
           icon: "service",
-          id: 7,
+          id: 4,
           title: "药物系统",
           type: "menu"
         }
@@ -166,15 +150,7 @@ export default {
       adminMenus: [
         {
           children: [],
-          code: "home",
-          icon: "homepage",
-          id: 2,
-          title: "系统首页",
-          type: "menu"
-        },
-        {
-          children: [],
-          code: "patient/statistics",
+          code: "admin/statistics",
           icon: "statistics",
           id: 1,
           title: "数据统计",
@@ -182,7 +158,7 @@ export default {
         },
         {
           children: [],
-          code: "patient/abnormal",
+          code: "admin/abnormal",
           icon: "service",
           id: 2,
           title: "异常患者",
@@ -190,7 +166,7 @@ export default {
         },
         {
           children: [],
-          code: "patient/patientManager",
+          code: "admin/patientManager",
           icon: "student",
           id: 3,
           title: "患者管理",
@@ -198,17 +174,17 @@ export default {
         },
         {
           children: [],
-          code: "doctor/doctorManager",
+          code: "admin/doctorManager",
           icon: "password",
-          id: 5,
+          id: 4,
           title: "医生管理",
           type: "menu"
         },
         {
           children: [],
-          code: "doctor/scheduling",
+          code: "admin/scheduling",
           icon: "college",
-          id: 4,
+          id: 5,
           title: "医生排班",
           type: "menu"
         }
@@ -222,7 +198,7 @@ export default {
   },
   mounted() {
     const path = window.location.pathname.split("/");
-    console.log(path);
+    console.log(path)
     const urls = [];
     path.forEach((e) => {
       if (e) {
@@ -240,7 +216,7 @@ export default {
       return this.$route.name;
     },
     roleId() {
-      return 1;
+      return localStorage.getItem('roleId');
     }
   }
 };
@@ -251,7 +227,7 @@ export default {
   width: 60px;
 }
 .sidebar-container {
-  background: #293045;
+   background: rgb(141,171,158)
 }
 .sidebarLogoFade-enter-active {
   transition: opacity 1.5s;
@@ -306,9 +282,11 @@ export default {
       background: #fff;
       &.checked {
         position: relative;
-        background: #19202f !important;
+        background: rgb(198,212,207) !important;
       }
-
+      &:hover{
+        background: rgb(198,212,207) !important;
+      }
       a {
         width: 100%;
         height: 100%;

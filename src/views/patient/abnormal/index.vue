@@ -89,7 +89,8 @@ export default {
         pageNumber: 1,
         pageSize: 10
       },
-      tableKey: 0
+      tableKey: 0,
+      listLoading:false,
     };
   }
 };

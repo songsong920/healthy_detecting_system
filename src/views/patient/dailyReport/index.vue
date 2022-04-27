@@ -136,6 +136,7 @@ export default {
         }
       ],
       form: {},
+      rules:{},
       total: 0,
       loading: false,
       loadingText: "确 定",
@@ -159,6 +160,9 @@ export default {
       this.dialogFormVisible = true;
       this.dialogStatus = "report";
     },
+    // 分页
+    handleSizeChange() {},
+    handleCurrentChange() {},
     // 返回
     cancel(formName) {
       this.dialogFormVisible = false;
