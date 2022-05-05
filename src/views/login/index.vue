@@ -48,6 +48,8 @@
   </div>
 </template>
 <script>
+// 从api/login中引入登录接口
+import {loginByPhone} from 'api/login'
 export default {
   name: "login",
   data() {
@@ -88,26 +90,31 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
+          //#region 
           let { mobilePhone, password } = this.loginForm;
           if (mobilePhone && password) {
             this.loading = false;
-            // localStorage.setItem("roleId", 1);
-            // localStorage.setItem("roleId", 2);
             localStorage.setItem("roleId", 3);
-            if(localStorage.getItem('roleId') == 1){ 
-              this.$router.replace({
-               path: "/admin"
+            this.$router.replace({
+               path: "/"
              });
-            }else if(localStorage.getItem('roleId') ==2){
-              this.$router.replace({
-               path: "/doctor"
-             });
-            }else{
-              this.$router.replace({
-               path: "/patient"
-             });
-            }
           }
+          //#endregion
+
+           //  满足条件调用login接口
+            // loginByPhone(this.loginForm).then(res=>{
+            //   //如果code或者其他状态200 代表成功，返回结果
+            //   if(res.code == 200){
+            //     // 存登录用户信息
+            //     localStorage.setItem("roleId", 1);
+            //     this.$router.replace({
+            //    path: "/"
+            //  });
+            //  this.$message.success('登录成功')
+            //   }else{
+            //     this.$message.error(res.msg)
+            //   }
+            // })
         }
       });
     },

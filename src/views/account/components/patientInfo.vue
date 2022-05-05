@@ -2,7 +2,7 @@
   <div class="account-page">
     <div class="container">
       <div class="title">
-        <div class='title-person'>个人信息</div>
+        <div class='title-person'>个人信息(患者)</div>
       </div>
         <div class="pageInfo">
           <div class="list">

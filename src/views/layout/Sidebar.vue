@@ -82,10 +82,10 @@ export default {
       patientMenus: [
         {
           children: [],
-          code: "patient/personalInfo",
+          code: "account",
           icon: "student",
           id: 1,
-          title: "个人详情",
+          title: "个人信息",
           type: "menu"
         },
         {
@@ -116,7 +116,7 @@ export default {
       doctorMenus: [
         {
           children: [],
-          code: "doctor/account",
+          code: "account",
           icon: "student",
           id: 1,
           title: "个人信息",
@@ -148,6 +148,14 @@ export default {
         }
       ],
       adminMenus: [
+        {
+          children: [],
+          code: "account",
+          icon: "student",
+          id: 1,
+          title: "个人信息",
+          type: "menu"
+        },
         {
           children: [],
           code: "admin/statistics",
@@ -198,7 +206,6 @@ export default {
   },
   mounted() {
     const path = window.location.pathname.split("/");
-    console.log(path)
     const urls = [];
     path.forEach((e) => {
       if (e) {
@@ -216,7 +223,7 @@ export default {
       return this.$route.name;
     },
     roleId() {
-      return localStorage.getItem('roleId');
+      return 1;
     }
   }
 };
@@ -227,7 +234,7 @@ export default {
   width: 60px;
 }
 .sidebar-container {
-   background: rgb(141,171,158)
+  background: rgb(141, 171, 158);
 }
 .sidebarLogoFade-enter-active {
   transition: opacity 1.5s;
@@ -282,10 +289,10 @@ export default {
       background: #fff;
       &.checked {
         position: relative;
-        background: rgb(198,212,207) !important;
+        background: rgb(198, 212, 207) !important;
       }
-      &:hover{
-        background: rgb(198,212,207) !important;
+      &:hover {
+        background: rgb(198, 212, 207) !important;
       }
       a {
         width: 100%;

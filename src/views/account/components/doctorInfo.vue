@@ -2,7 +2,7 @@
   <div class="account-page">
     <div class="container">
       <div class="title">
-        <div class='title-person'>个人信息</div>
+        <div class='title-person'>个人信息(医生)</div>
         <el-button type="primary" size="small" @click="handleUpdate">修改信息</el-button>
       </div>
         <div class="pageInfo">

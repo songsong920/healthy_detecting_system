@@ -25,7 +25,20 @@ export const constantRouterMap = [{
   path: '*',
   redirect: '/404'
   },
-
+  // 个人信息
+  {
+    path: '/',
+    component: Layout,
+    redirect: 'account',
+    children: [{
+      path: 'account',
+      component: _import('account/index'),
+      name: '个人信息',
+      meta: {
+        parent: true
+      }
+    }]
+  },
 // 管理员
 {
   path: '/admin',
@@ -65,14 +78,8 @@ export const constantRouterMap = [{
   path: '/doctor',
   component: Layout,
   hidden: true,
-  redirect:'doctor/account',
   children: [
     {
-      path: 'account',
-      component: _import('doctor/account'),
-      name: '个人信息',
-    },
-        {
       path: 'patientInfo',
       component: _import('patient/patientInfo'),
       name: '患者信息',
@@ -94,13 +101,7 @@ export const constantRouterMap = [{
   path: '/patient',
   component: Layout,
   hidden: true,
-  redirect:"patient/personalInfo",
   children: [
-    {
-      path: 'personalInfo',
-      component: _import('patient/personal/index'),
-      name: '个人详情',
-    },
     {
       path: 'prescription',
       component: _import('patient/prescription/index'),
@@ -117,7 +118,7 @@ export const constantRouterMap = [{
       name: '医生栏目',
     },
     {
-      path: 'docSelect',
+      path: 'doctorSelect',
       component: _import('doctor/doctorSelect'),
       name: '选择医生',
     },

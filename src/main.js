@@ -30,19 +30,9 @@ router.beforeEach((to, from, next) => {
   let roleId = localStorage.getItem('roleId')
   if (roleId) { // 判断是否有角色
     if (to.path === '/login') {
-      if (roleId == 1) {
-        next({
-          path: '/admin'
-        });
-      } else if (roleId == 2) {
-        next({
-          path: '/admin'
-        });
-      } else {
-        next({
-          path: '/patient'
-        });
-      }
+      next({
+        path: '/'
+      });
     } else {
       next()
     }
