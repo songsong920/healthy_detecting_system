@@ -43,17 +43,15 @@
         </el-table-column>
          <el-table-column align="center" label="是否异常">
           <template slot-scope="scope">
-            <span>{{ scope.row.status?'是':'否' }}</span>
+            <span>{{ scope.row.status?'正常':'异常' }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="200">
+        <el-table-column align="center" label="操作" width="120">
           <template slot-scope="scope">
             <el-button
-              v-if="scope.row.status"
               type="text"
               @click="handleSendMsg(scope.row)"
-              style="color: #e8505b !important"
-              >一键通知</el-button
+              >一键提醒</el-button
             >
           </template>
         </el-table-column>
@@ -143,7 +141,7 @@ export default {
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        send: "一键通知",
+        send: "一键提醒",
       },
     };
   },
@@ -152,8 +150,7 @@ export default {
   },
   methods:{
     getList(){
-      // {date:this.parseTime(new Date().toLocaleString(),'{y}-{m}-{d}')}
-      showAllHealthStatus(this.formatParams({date:'2022-05-06'})).then(res=>{
+      showAllHealthStatus(this.formatParams({date:this.parseTime(new Date().toLocaleString(),'{y}-{m}-{d}')})).then(res=>{
         this.list = res
       })
     },
@@ -162,24 +159,17 @@ export default {
       this.dialogFormVisible = false;
       this.$refs[formusername].resetFields();
     },
-    // 一键通知
+    // 一键提醒
     handleSendMsg(row){
       this.form = { ...row };
-      this.$confirm("确认一键通知医生?", "一键通知", {
+      this.$confirm("确认一键提醒医生?", "一键提醒", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
         sendMessage(this.formatParams(this.form)).then((res) => {
-          if (res == "删除成功") {
-            this.loading = false;
-            this.dialogFormVisible = false;
-            this.$message.success("一键通知成功");
-            this.getList();
-          } else {
-            this.loading = false;
-            this.$message.error(res);
-          }
+          this.$message.success("一键提醒成功");
+          this.getList();
         });
       });
     },

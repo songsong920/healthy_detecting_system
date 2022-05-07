@@ -13,37 +13,22 @@
         :cell-style="{ textAlign: 'left' }"
         :header-cell-style="{ background: '#F8F8F9', textAlign: 'left' }"
       >
-        <el-table-column align="center" label="姓名">
+        <el-table-column align="center" label="患者姓名">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.dname }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="性别">
+        <el-table-column align="center" label="状态">
           <template slot-scope="scope">
-            <span>{{ scope.row.sex }}</span>
+            <span>{{ scope.row.status?'已处理':'未处理' }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label=" 身份信息">
+        <el-table-column align="center" label="报警信息描述" >
           <template slot-scope="scope">
-            <span>{{ scope.row.idCard }}</span>
+            <span>{{ scope.row.msg }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="血压">
-          <template slot-scope="scope">
-            <span>{{ scope.row.bloodPressure }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="脉搏">
-          <template slot-scope="scope">
-            <span>{{ scope.row.pulse }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="体温">
-          <template slot-scope="scope">
-            <span>{{ scope.row.temperature ? scope.row.temperature : "0" }}℃</span
-            >
-          </template>
-        </el-table-column>
+        
          <el-table-column align="center" label="操作" width="140">
           <template slot-scope="scope">
             <el-button type="text" @click="handleUpstatus(scope.row)">状态编辑</el-button>
@@ -138,16 +123,18 @@ export default {
   created(){
     this.getMessage()
   },
+
   methods:{
     getMessage(){
-       getMessage().then(res=>{
+       getMessage(this.formatParams({username:localStorage.getItem('roleName')})).then(res=>{
         this.list = res
       })
     },
      // 编辑按钮操作
     handleUpstatus(row) {
-      this.dialogFormVisible = true;
+      // this.dialogFormVisible = true;
       this.dialogStatus = "update";
+      this.$message.info('功能尚未开通')
     },
   }
 };

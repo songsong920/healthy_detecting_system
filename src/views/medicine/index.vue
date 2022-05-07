@@ -3,9 +3,9 @@
     <div class="app-header">
       <div class="allManager"><span>药物系统</span></div>
       <div>
-        <el-button icon="el-icon-plus" size="small" @click="handleCreate" type="primary"
+        <!-- <el-button icon="el-icon-plus" size="small" @click="handleCreate" type="primary"
           >添加药物</el-button
-        >
+        > -->
       </div>
     </div>
     <div class="app-container calendar-list-container">
@@ -48,13 +48,13 @@
             <span>{{ scope.row.number }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="药物描述">
+        <el-table-column align="center" label="药物描述" width="480">
           <template slot-scope="scope">
             <span>{{ scope.row.description }}</span>
           </template>
         </el-table-column>
       
-        <el-table-column align="center" label="操作" width="200">
+        <!-- <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button type="text" @click="handleUpdate(scope.row)">编辑</el-button>
             <span style="color: #cbcbcb">|</span>
@@ -65,7 +65,7 @@
               >删除</el-button
             >
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <!-- <div v-show="!listLoading" class="pagination-container">
         <el-pagination

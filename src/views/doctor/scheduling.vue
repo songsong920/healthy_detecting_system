@@ -2,6 +2,7 @@
   <div>
     <div class="app-header">
       <div class="allManager">医生排班</div>
+      <el-button   @click="handleCreate" type="primary" size="small">添加排班</el-button>
     </div>
     <div class="app-container">
       <div class="class-table">
@@ -27,24 +28,27 @@
                   </th>
                 </tr>
                 <tr
-                  v-for="(dept, deptIndex) in deptOptions"
+                  v-for="(lesson, deptIndex) in deptOptions"
                   :key="deptIndex"
                   style="border: 1px solid #e7e7e7"
                 >
                   <td style="border: 1px solid #e7e7e7;">
-                    <p>{{ dept.dept }}</p>
+                    <p>{{ lesson.dept }}</p>
                   </td>
+                  
                   <td
-                    v-for="(item, index) in dept.list"
+                    v-for="(item, index) in lesson.list"
                     :key="item + index"
                     style="border: 1px solid #e7e7e7"
                     class="schedule-list-wrapper"
                   >
                     <div v-if="item && item.length">
                       <div v-for="(course, courseIndex) in item" :key="courseIndex + course">
-                        <div @click="handleUpdate(course.id)" v-if="courseIndex < 1">
-                          <p>{{ course.doctorName }}</p>
-                          <el-button type="text" style="font-size: 10px;padding:0">排班编辑</el-button>
+                        <div  v-if="courseIndex < 1">
+                          <p>{{ course.dname }}</p>
+                          <el-button type="text" style="font-size: 10px;padding:0" @click="handleUpdate(course)">编辑</el-button>
+                         <el-button type="text" style="font-size: 10px;padding:0" @click="handleDelete(course)">删除</el-button>
+                          
                         </div>
                       </div>
                     </div>
@@ -146,45 +150,6 @@ export default {
         { weekType: "7", value: "周日" }
       ],
       deptOptions: [],
-      tableData: {
-        list: [
-          {
-            classTime: "2022-05-03", //日期可以不要
-            doctorName: "张三",  //医生姓名
-            id: 1,
-            departId: 4, //科室id 与科室进行管理
-            weekType: "2" // 周几
-          },
-          {
-            classTime: "2022-05-03",
-            doctorName: "李四",
-            id: 2,
-            departId: 6,
-            weekType: "2"
-          },
-          {
-            classTime: "2022-05-03",
-            doctorName: "王五",
-            id: 3,
-            departId: 1,
-            weekType: "2"
-          },
-          {
-            classTime: "2022-05-03",
-            doctorName: "赵六",
-            id: 4,
-            departId: 3,
-            weekType: "5"
-          },
-          {
-            classTime: "2022-05-03",
-            doctorName: "宋七",
-            id: 5,
-            departId: 1,
-            weekType: "3"
-          }
-        ],
-      },
       dialogFormVisible: false,
       rules: {
         date: [
@@ -224,9 +189,8 @@ export default {
     };
   },
   created() {
-    this.getData()
-    this.getList()
     this.getDept()
+    this.getList()
     this.getMap()
   },
   computed: { 
@@ -240,12 +204,13 @@ export default {
       var now = new Date();
       var nowTime = now.getTime() ;
       var day = now.getDay();
+      console.log(day)
       var oneDayTime = 24*60*60*1000;
       var one = nowTime - (day-1)*oneDayTime ;//显示周一
-      var two = nowTime - (2-day)*oneDayTime ;//显示周二
-      var three = nowTime - (3-day)*oneDayTime ;//显示周三
-      var four = nowTime - (4-day)*oneDayTime ;//显示周四
-      var five = nowTime - (5-day)*oneDayTime ;//显示周五
+      var two = nowTime - (10-day)*oneDayTime ;//显示周二
+      var three = nowTime - (9-day)*oneDayTime ;//显示周三
+      var four = nowTime - (8-day)*oneDayTime ;//显示周四
+      var five = nowTime - (7-day)*oneDayTime ;//显示周五
       var six = nowTime - (6-day)*oneDayTime ;//显示周六
       var serven =  nowTime + (7-day)*oneDayTime ;//显示周日
       this.mapList = {
@@ -258,22 +223,27 @@ export default {
           7: this.parseTime(new Date(serven),'{y}-{m}-{d}')
         }
     },
+
     // 获取医生列表
     getList(){
       findallDoctor().then(res=>{
         this.docList = res
       })
     },
-    getData(d){
+    getData(){
       showWeeklyRoaster().then(res=>{
-        
+        if(res && res.length){
+          this.scheduleList = this.handleTableData(res);
+        }else{
+          this.scheduleList = []
+        }
       })
     },
     // 查询所有科室
     getDept(){
       findAllDept().then(res=>{
         this.deptOptions = res
-        this.scheduleList = this.handleTableData(this.tableData.list);
+        this.getData()
      })
     },
     // 处理表格数据
@@ -282,9 +252,9 @@ export default {
         this.deptOptions.forEach((dept) => {
           dept.list = [[], [], [], [], [], [], []];
           scheduleList.forEach((item) => {
-            if (dept.no == item.id) {
+            if (dept.no == item.dno) {
               for (var i = 0; i < 7; i++) {
-                if (item.weekType - 1 == i) {
+                if (Number(item.weekType) - 1 == i) {
                   dept.list[i].push(item);
                 }
               }
@@ -292,20 +262,18 @@ export default {
           });
         });
       }
-      console.log(this.deptOptions);
+      this.$forceUpdate();
       return this.deptOptions;
-    },
-    // 根据时间更新课程表
-    handleChangeTime(value) {
-      this.getList(value);
     },
     // 新增排班
     handleCreate(){
+      this.form ={}
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
     },
     //排班编辑
-    handleUpdate(id) {
+    handleUpdate(row) {
+      this.form = {...row}
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
     },
@@ -315,6 +283,7 @@ export default {
     },
     // 删除排班
     handleDelete(row) {
+      this.form ={...row}
       this.$confirm("确认删除此排班?", "删除排班", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -322,9 +291,9 @@ export default {
       }).then(() => {
         this.loading = true;
         deleteDoctor(this.formatParams(this.form)).then(res=>{
-          if(res == '删除成功'){
-            this.$message.success('删除成功')
-            this.getList()
+          if(res == '删除排班成功'){
+            this.$message.success('删除排班成功')
+            this.getDept()
             this.loading = false
           }else{
             this.loading = false
@@ -343,7 +312,7 @@ export default {
             if (res == "添加排班成功") {
               this.loading = false;
               this.dialogFormVisible = false;
-              this.getList();
+              this.getDept();
               this.$message.success("添加排班成功");
             } else {
               this.loading = false;
@@ -359,14 +328,14 @@ export default {
       set[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
-          updateDoctor(this.formatParams(this.form)).then((response) => {
+          updateDoctor(this.formatParams(this.form)).then((res) => {
             this.loading = false;
             if (res == '编辑排班成功') {
               this.$message.success("编辑排班成功");
-              this.getList(); //获取课程列表
+              this.getDept(); //获取课程列表
               this.dialogFormVisible = false;
             } else {
-              this.$message.error(response.msg);
+              this.$message.error(res);
             }
           });
         }

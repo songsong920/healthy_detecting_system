@@ -68,7 +68,7 @@ export function findAllDrug(data) {
 }
 export function getMessage(data) {
   return fetch({
-    url: '/api/loginController/getMessage',
+    url: '/api/doctor/getMessage',
     method: 'post',
     data
   });

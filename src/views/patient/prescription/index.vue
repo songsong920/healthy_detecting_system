@@ -23,9 +23,9 @@
             <span>{{ scope.row.prescriptionListNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="药物：一日几次/剂量/药物编号">
+        <el-table-column align="center" label="药物编号：一日几次/剂量">
           <template slot-scope="scope">
-            <span v-for="(item,index) in scope.row.prescriptionList" :key="index">{{ `药物${index+1}:` +item.dayToEat+'/'+item.dose+"/"+item.drug
+            <span v-for="(item,index) in scope.row.prescriptionList" :key="index">{{ `编号${item.drug}:` +item.dayToEat+'/'+item.dose
 }}<br></span>
           </template>
         </el-table-column>
