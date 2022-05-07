@@ -1,23 +1,27 @@
 <template>
   <div class="login-container">
-    <el-form
-      :model="loginForm"
-      :rules="loginRules"
-      ref="loginForm"
-      label-width="0px"
-      class="login-form"
-    >
+    <el-form :model="form" :rules="loginRules" ref="form" label-width="0px" class="login-form">
       <div class="account-login-page">
         <div class="loginWapper">
           <div class="school-header">注册账号</div>
-          <el-form-item prop="'mobilePhone" class="username">
+          <el-form-item prop="'id" class="username">
             <el-input
               name="username"
               type="text"
-              v-model.trim="loginForm.mobilePhone"
-              @keyup.enter.native="handleLogin"
-              onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
-              placeholder="请输入账号"
+              v-model.trim="form.id"
+              @keyup.enter.native="handleRegister"
+              placeholder="请输入用户编号"
+              clearable
+              :maxlength="20"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="'username" class="username">
+            <el-input
+              name="username"
+              type="text"
+              v-model.trim="form.username"
+              @keyup.enter.native="handleRegister"
+              placeholder="请输入用户名"
               clearable
               :maxlength="20"
             ></el-input>
@@ -26,10 +30,9 @@
             <el-input
               name="password"
               type="password"
-              @keyup.enter.native="handleLogin"
-              v-model.trim="loginForm.password"
+              @keyup.enter.native="handleRegister"
+              v-model.trim="form.password"
               clearable
-              onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
               placeholder="请输入密码"
               :maxlength="16"
               show-password
@@ -49,18 +52,27 @@
   </div>
 </template>
 <script>
+import { regist } from "api/patient";
 export default {
   data() {
     return {
-      loginForm: {
-        mobilePhone: "",
+      form: {
+        id:'',
+        username: "",
         password: ""
       },
       loginRules: {
-        mobilePhone: [
+        id: [
           {
             required: true,
-            message: "手机号不能为空",
+            message: "编号不能为空",
+            trigger: "blur"
+          }
+        ],
+        username: [
+          {
+            required: true,
+            message: "账号不能为空",
             trigger: "blur"
           }
         ],
@@ -79,7 +91,23 @@ export default {
   methods: {
     // 注册按钮操作
     handleRegister() {
-      this.$message.info("注册接口...");
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          this.loadingText = "注册中...";
+          regist(this.formatParams(this.form)).then((res) => {
+            if (res == '注册成功') {
+              this.$message.success("注册成功");
+              this.loading = false;
+              this.loadingText = "确 认";
+            } else {
+              this.loading = false;
+              this.loadingText = "确 认";
+              this.$message.error(res);
+            }
+          });
+        }
+      });
     }
   }
 };
@@ -135,7 +163,7 @@ export default {
   line-height: 124px;
   font-weight: bold;
   font-family: PingFangSC-Semibold, PingFang SC;
-  margin-bottom: 70px;
+  margin-bottom: 30px;
 }
 .login-form {
   position: absolute;

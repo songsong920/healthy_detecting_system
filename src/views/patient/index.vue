@@ -9,19 +9,8 @@
       </div>
     </div>
     <div class="app-container calendar-list-container">
-      <el-form :model="listQuery" :inline="true" @submit.native.prevent>
-        <el-form-item>
-          <el-input
-            placeholder="请输入就诊卡号"
-            v-model="listQuery.idCard"
-            size="small"
-            clearable
-            @keyup.enter.native="handleFilter"
-            style="width: 180px; margin-left: 15px"
-          >
-          </el-input>
-        </el-form-item>
-        <el-form-item>
+      <!-- <el-form :model="listQuery" :inline="true" @submit.native.prevent>
+        <el-form-item style="margin-left:15px">
           <el-input
             placeholder="请输入患者姓名"
             v-model="listQuery.name"
@@ -31,20 +20,9 @@
             style="width: 180px"
           >
           </el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input
-            placeholder="请输入身份证号"
-            v-model="listQuery.idCard"
-            size="small"
-            clearable
-            @keyup.enter.native="handleFilter"
-            style="width: 180px"
-          >
-          </el-input>
           <el-button type="primary" size="small" @click="handleFilter">查询</el-button>
         </el-form-item>
-      </el-form>
+      </el-form> -->
       <el-table
         :key="tableKey"
         :data="list"
@@ -54,29 +32,39 @@
         :cell-style="{ textAlign: 'left' }"
         :header-cell-style="{ background: '#F8F8F9', textAlign: 'left' }"
       >
-        <el-table-column align="center" label="姓名">
+        <el-table-column align="center" label="序号">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="性别">
+        <el-table-column align="center" label="姓名">
           <template slot-scope="scope">
-            <span>{{ scope.row.sex }}</span>
+            <span>{{ scope.row.username }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="编号">
+          <template slot-scope="scope">
+            <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="密码">
+          <template slot-scope="scope">
+            <span>{{ scope.row.password }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label=" 身份信息">
           <template slot-scope="scope">
-            <span>{{ scope.row.idCard }}</span>
+            <span>{{ scope.row.idCard ? scope.row.idCard : "-" }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="病历记录">
           <template slot-scope="scope">
-            <span>{{ scope.row.mobilePhone }}</span>
+            <span>{{ scope.row.record ? scope.row.record : "-" }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="住院信息">
           <template slot-scope="scope">
-            <span>{{ scope.row.date }}</span>
+            <span>{{ scope.row.record ? scope.row.record : "-" }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
@@ -92,7 +80,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-show="!listLoading" class="pagination-container">
+      <!-- <div v-show="!listLoading" class="pagination-container">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -103,7 +91,7 @@
           :total="total"
           background
         ></el-pagination>
-      </div>
+      </div> -->
       <el-dialog
         :title="textMap[dialogStatus]"
         :visible.sync="dialogFormVisible"
@@ -111,46 +99,30 @@
         width="450px"
       >
         <el-form :model="form" :rules="rules" ref="form" label-width="90px">
-          <el-form-item label="患者姓名" prop="name">
+          <el-form-item label="患者姓名" prop="username">
             <el-input
-              v-model="form.name"
+              v-model="form.username"
               placeholder="请输入患者姓名"
               style="width: 100%"
-              maxlength="10"
+              maxlength="50"
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="患者性别" prop="sex">
-            <el-radio-group v-model="form.sex" style="margin-bottom: -10px">
-              <el-radio label="1">男</el-radio>
-              <el-radio label="2" style="margin-left: 30px">女</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="患者编号" prop="idCard">
+          <el-form-item label="患者编号" prop="id">
             <el-input
-              v-model="form.idCard"
+              v-model="form.id"
               placeholder="请输入患者编号"
               style="width: 100%"
-              maxlength="15"
+              maxlength="50"
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="身份证号" prop="idCard">
+          <el-form-item label="患者密码" prop="password">
             <el-input
-              v-model="form.idCard"
-              placeholder="请输入身份证号"
+              v-model="form.password"
+              placeholder="请输入患者密码"
               style="width: 100%"
-              maxlength="15"
-              size="small"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="联系方式" prop="mobilePhone">
-            <el-input
-              v-model="form.mobilePhone"
-              placeholder="请输入手机号码"
-              style="width: 100%"
-              maxlength="11"
-              minlength="11"
+              maxlength="30"
               size="small"
             ></el-input>
           </el-form-item>
@@ -180,51 +152,17 @@
 </template>
 
 <script>
+import { alluser } from "api/patient";
+import { operatePatient } from "api/admin";
+import { searchDoctorByName } from "api/patient";
 export default {
-  name: "Doctor",
   data() {
     return {
-      list: [
-        {
-          name: "患者1",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25"
-        },
-        {
-          name: "患者2",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25"
-        },
-        {
-          name: "患者3",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25"
-        },
-        {
-          name: "患者4",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25"
-        },
-        {
-          name: "患者5",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25"
-        }
-      ],
+      list: [],
       form: {},
       rules: {
-        name: [
-          { required: true, message: "姓名不能为空", trigger: "blur" },
+        username: [
+          { required: true, message: "患者姓名不能为空", trigger: "blur" },
           { max: 50, message: "最大长度为50个字符", trigger: "blur" },
           {
             required: true,
@@ -233,33 +171,17 @@ export default {
             trigger: "blur"
           }
         ],
-        sex: [
-          {
-            required: true,
-            message: "请选择患者性别",
-            trigger: "blur"
-          }
-        ],
-        idCard: [
+        id: [
           {
             required: true,
             message: "患者编号不能为空",
             trigger: "blur"
           }
         ],
-        mobilePhone: [
-          { required: true, message: "联系方式不能为空", trigger: "blur" },
+        password: [
           {
             required: true,
-            pattern: /^1[3456789]\d{9}$/,
-            message: "请输入11位正确的电话号码",
-            trigger: "blur"
-          }
-        ],
-        date: [
-          {
-            required: true,
-            message: "请选择患者入职日期",
+            message: "患者密码不能为空",
             trigger: "blur"
           }
         ]
@@ -269,8 +191,6 @@ export default {
       loadingText: "确 定",
       listLoading: false,
       listQuery: {
-        pageNumber: 1,
-        pageSize: 10,
         name: undefined
       },
       dialogFormVisible: false,
@@ -282,52 +202,136 @@ export default {
       tableKey: 0
     };
   },
+  created() {
+    this.getList();
+  },
+  computed: {
+    roleName() {
+      return localStorage.getItem('roleName');
+    },
+    password() {
+      return localStorage.getItem('password');
+    }     
+  },
   methods: {
+    // 获取患者列表
+    getList() {
+      let params = {
+        username:this.roleName,
+        passward:this.password
+      };
+      alluser(params).then((res) => {
+        this.list = res;
+      });
+    },
+    //表单重置
+    resetTemp() {
+      this.loading = false;
+      this.loadingText = "确 定";
+      this.form = {
+        choice: undefined,
+        username: undefined,
+        password: undefined
+      };
+      this.resetForm("form");
+    },
     // 添加按钮操作
     handleCreate() {
+      this.resetTemp();
       this.dialogStatus = "create";
       this.dialogFormVisible = true;
+      this.form.choice = 1;
     },
     // 编辑按钮操作
     handleUpdate(row) {
+      this.form = { ...row };
       this.dialogFormVisible = true;
       this.dialogStatus = "update";
+      this.form.choice = 3;
     },
     // 删除患者
     handleDelete(row) {
+      this.form = { ...row };
+      this.form.choice = 2;
       this.$confirm("确认删除此患者?", "删除患者", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        this.$message.info("删除接口...");
+        operatePatient(this.formatParams(this.form)).then((res) => {
+          if (res == "删除成功") {
+            this.loading = false;
+            this.dialogFormVisible = false;
+            this.$message.success("删除成功");
+            this.getList();
+          } else {
+            this.loading = false;
+            this.$message.error(res);
+          }
+        });
       });
     },
     // 查询
-    handleFilter() {},
+    handleFilter() {
+       if(this.listQuery.name){
+        searchDoctorByName(this.formatParams({name:this.listQuery.name})).then(res=>{
+          if(res){
+            let list = []
+            list.push(res)
+            this.list = list
+          }else{
+            this.list = []
+          }
+      })
+      }else{
+        this.getList()
+      }
+    },
     // 分页
     handleSizeChange() {},
     handleCurrentChange() {},
     // 添加
-    create(formName) {
+    create(formusername) {
       const set = this.$refs;
-      set[formName].validate((valid) => {
+      set[formusername].validate((valid) => {
         if (valid) {
-          this.$message.info("新增接口...");
+          this.loading = true;
+          operatePatient(this.formatParams(this.form)).then((res) => {
+            if (res == "注册成功") {
+              this.loading = false;
+              this.dialogFormVisible = false;
+              this.getList();
+              this.$message.success("添加成功");
+            } else {
+              this.loading = false;
+              this.$message.error(res);
+            }
+          });
         }
       });
     },
     // 返回
-    cancel(formName) {
+    cancel(formusername) {
       this.dialogFormVisible = false;
-      this.$refs[formName].resetFields();
+      this.$refs[formusername].resetFields();
     },
     // 编辑
-    update(formName) {
+    update(formusername) {
       const set = this.$refs;
-      set[formName].validate((valid) => {
+      set[formusername].validate((valid) => {
         if (valid) {
-          this.$message.info("编辑接口...");
+          this.loading = true;
+          operatePatient(this.formatParams(this.form)).then((res) => {
+            if (res == "修改成功") {
+              this.loading = false;
+              this.dialogFormVisible = false;
+              this.$message.success("修改成功");
+              this.getList();
+            } else {
+              this.loading = false;
+              this.$message.error(res);
+            }
+          });
         }
       });
     }

@@ -13,30 +13,34 @@
         :cell-style="{ textAlign: 'left' }"
         :header-cell-style="{ background: '#F8F8F9', textAlign: 'left' }"
       >
-        <el-table-column align="center" label="药物名称">
+        <el-table-column align="center" label="医生名称">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.dname }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="药物数量">
+        <el-table-column align="center" label="处方编号">
           <template slot-scope="scope">
-            <span>{{ scope.row.number }}</span>
+            <span>{{ scope.row.prescriptionListNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label=" 用药剂量">
+        <el-table-column align="center" label="药物：一日几次/剂量/药物编号">
           <template slot-scope="scope">
-            <span>{{ scope.row.count }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="处方状态">
-          <template slot-scope="scope">
-            <span>{{ scope.row.status == 1 ? "已取药" : "未取药" }}</span>
+            <span v-for="(item,index) in scope.row.prescriptionList" :key="index">{{ `药物${index+1}:` +item.dayToEat+'/'+item.dose+"/"+item.drug
+}}<br></span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="140">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleUpstatus(scope.row)">状态编辑</el-button>
+            <!-- <el-button type="text" @click="handleUpstatus(scope.row)">编辑</el-button>
+            <span style="color: #cbcbcb">|</span> -->
+            <el-button
+              type="text"
+              @click="handleDelete(scope.row)"
+              style="color: #e8505b !important"
+              >删除</el-button
+            >
           </template>
+
         </el-table-column>
       </el-table>
       <div v-show="!listLoading" class="pagination-container">
@@ -100,6 +104,7 @@
 </template>
 
 <script>
+import { showMyPrescription,deleteMyPrescriptionList } from "api/patient";
 export default {
   data() {
     return {
@@ -113,38 +118,7 @@ export default {
           label: "未取药"
         }
       ],
-      list: [
-        {
-          name: "感冒药",
-          number: "4",
-          count: "一日三次，一次三颗",
-          status: "1"
-        },
-        {
-          name: "消炎药",
-          number: "4",
-          count: "一日三次，一次三颗",
-          status: "2"
-        },
-        {
-          name: "斯达舒",
-          number: "4",
-          count: "一日三次，一次三颗",
-          status: "2"
-        },
-        {
-          name: "新冠病毒特效药",
-          number: "4",
-          count: "一日三次，一次三颗",
-          status: "1"
-        },
-        {
-          name: "新冠病毒特效药",
-          number: "4",
-          count: "一日三次，一次三颗",
-          status: "1"
-        }
-      ],
+      list: [],
       form: {},
       rules: {
         status: [
@@ -173,7 +147,24 @@ export default {
       tableKey: 0
     };
   },
+  created(){
+    this.getList()
+  },
+   computed: {
+    roleName() {
+      return localStorage.getItem('roleName');
+    },
+    password() {
+      return localStorage.getItem('password');
+    }     
+  },
   methods: {
+    // 获取处方列表
+    getList(){
+      showMyPrescription(this.formatParams({pname:this.roleName})).then(res=>{
+        this.list = res
+      })
+    },
     // 编辑按钮操作
     handleUpstatus(row) {
       this.dialogFormVisible = true;
@@ -189,17 +180,25 @@ export default {
       this.dialogFormVisible = false;
       this.$refs[formName].resetFields();
     },
-    // 编辑
-    update(formName) {
-      const set = this.$refs;
-      set[formName].valistatus((valid) => {
-        if (valid) {
-          this.loading = true;
-          this.loadingText = "保存中...";
-          // 编辑接口
+     // 删除处方
+    handleDelete(row) {
+
+      this.$confirm("确认删除我的处方?", "删除处方", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let params = {
+          pname:row.pname,
+          prescriptionListNumber:row.prescriptionListNumber
         }
+        deleteMyPrescriptionList(this.formatParams(params)).then((res) => {
+            this.loading = false;
+            this.$message.success("删除成功");
+            this.getList();
+        });
       });
-    }
+    },
   }
 };
 </script>

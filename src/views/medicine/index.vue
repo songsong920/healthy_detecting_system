@@ -16,11 +16,12 @@
             v-model="listQuery.name"
             size="small"
             clearable
-            @keyup.enter.native="handleFilter"
+            @change="searchDurgByNmae"
+            @keyup.enter.native="searchDurgByNmae"
             style="width: 180px; margin-left: 15px"
           >
           </el-input>
-          <el-button type="primary" size="small" @click="handleFilter">查询</el-button>
+          <el-button type="primary" size="small" @click="searchDurgByNmae">查询</el-button>
         </el-form-item>
       </el-form>
       <el-table
@@ -32,26 +33,27 @@
         :cell-style="{ textAlign: 'left' }"
         :header-cell-style="{ background: '#F8F8F9', textAlign: 'left' }"
       >
-        <el-table-column align="center" label="药物信息">
+      <el-table-column align="center" label="序号">
+          <template slot-scope="scope">
+            <span>{{ scope.$index + 1 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="药物名称">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="药物简介">
-          <template slot-scope="scope">
-            <span>{{ scope.row.remark }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="是否有库存">
-          <template slot-scope="scope">
-            <span>{{ scope.row.stock }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="库存">
+          <el-table-column align="center" label="药物编号">
           <template slot-scope="scope">
             <span>{{ scope.row.number }}</span>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="药物描述">
+          <template slot-scope="scope">
+            <span>{{ scope.row.description }}</span>
+          </template>
+        </el-table-column>
+      
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button type="text" @click="handleUpdate(scope.row)">编辑</el-button>
@@ -65,7 +67,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div v-show="!listLoading" class="pagination-container">
+      <!-- <div v-show="!listLoading" class="pagination-container">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -76,7 +78,7 @@
           :total="total"
           background
         ></el-pagination>
-      </div>
+      </div> -->
       <el-dialog
         :title="textMap[dialogStatus]"
         :visible.sync="dialogFormVisible"
@@ -93,29 +95,23 @@
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="编号" prop="remark">
+          <el-form-item label="编号" prop="number">
             <el-input
-              v-model="form.remark"
+              v-model="form.number"
               placeholder="请输入编号"
               style="width: 100%"
               maxlength="15"
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="库存" prop="remark">
+          <el-form-item label="描述" prop="description">
             <el-input
-              v-model="form.remark"
-              placeholder="请输入库存数量"
+              v-model="form.description"
+              placeholder="请输入药物描述"
               style="width: 100%"
               maxlength="15"
               size="small"
             ></el-input>
-          </el-form-item>
-          <el-form-item label="是否有库存" prop="kucun">
-            <el-radio-group v-model="form.sex" style="margin-bottom: -10px">
-              <el-radio label="1">是</el-radio>
-              <el-radio label="2" style="margin-left: 30px">否</el-radio>
-            </el-radio-group>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -143,76 +139,37 @@
 </template>
 
 <script>
+import { makePrescription,findAllDrug,searchDurgByNmae } from "api/doctor";
 export default {
   name: "Medicine",
   data() {
     return {
-      list: [
-        {
-          name: "药物1",
-          stock: "是",
-          mobilePhone: "13655555555",
-          remark: "522422199800114456",
-          number: "888"
-        },
-        {
-          name: "药物2",
-          stock: "否",
-          mobilePhone: "13655555555",
-          remark: "522422199800114456",
-          number: "0"
-        },
-        {
-          name: "药物3",
-          stock: "否",
-          mobilePhone: "13655555555",
-          remark: "522422199800114456",
-          number: "0"
-        },
-        {
-          name: "药物4",
-          stock: "否",
-          mobilePhone: "13655555555",
-          remark: "522422199800114456",
-          number: "0"
-        },
-        {
-          name: "药物5",
-          stock: "否",
-          mobilePhone: "13655555555",
-          remark: "522422199800114456",
-          number: "0"
-        }
-      ],
+      list: [],
       form: {},
       rules: {
         name: [
           { required: true, message: "药物名不能为空", trigger: "blur" },
-          { max: 50, message: "最大长度为50个字符", trigger: "blur" },
         ],
-        stock: [
+        number: [
           {
             required: true,
             message: "请输入药物编号",
             trigger: "blur"
           }
         ],
-        remark: [
+        description: [
           {
             required: true,
-            message: "库存不能为空",
+            message: "药物描述不能为空",
             trigger: "blur"
           }
         ],
-        kucun: [{ required: true, message: "是否有库存不能为空", trigger: "blur" }]
       },
       total: 0,
       loading: false,
       loadingText: "确 定",
       listLoading: false,
       listQuery: {
-        pageNumber: 1,
-        pageSize: 10,
         name: undefined
       },
       dialogFormVisible: false,
@@ -224,7 +181,31 @@ export default {
       tableKey: 0
     };
   },
+  created(){
+    this.getList()
+  },
   methods: {
+    // 获取药物列表
+    getList(){
+      findAllDrug().then(res=>{
+        this.list = res
+      })
+    },
+    searchDurgByNmae(){
+      if(this.listQuery.name){
+        searchDurgByNmae(this.formatParams({name:this.listQuery.name})).then(res=>{
+          if(res){
+            let list = []
+            list.push(res)
+            this.list = list
+          }else{
+            this.list = []
+          }
+      })
+      }else{
+        this.getList()
+      }
+    },
     // 添加按钮操作
     handleCreate() {
       this.dialogStatus = "create";
@@ -251,13 +232,23 @@ export default {
     handleSizeChange() {},
     handleCurrentChange() {},
     // 添加
-    create(formName) {
+    create(formusername) {
       const set = this.$refs;
-      set[formName].validate((valid) => {
+      set[formusername].validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.loadingText = "保存中...";
-          // 新增接口
+          this.$message.info('功能尚未开通')
+          // makePrescription(this.formatParams(this.form)).then((res) => {
+          //   if (res == "注册成功") {
+          //     this.loading = false;
+          //     this.dialogFormVisible = false;
+          //     this.getList();
+          //     this.$message.success("添加成功");
+          //   } else {
+          //     this.loading = false;
+          //     this.$message.error(res);
+          //   }
+          // });
         }
       });
     },

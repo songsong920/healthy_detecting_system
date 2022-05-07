@@ -93,7 +93,7 @@ export default {
           code: "patient/myDoctor",
           icon: "password",
           id: 2,
-          title: "医生栏目",
+          title: "我的医生",
           type: "menu"
         },
         {
@@ -101,7 +101,7 @@ export default {
           code: "patient/prescription",
           icon: "service",
           id: 3,
-          title: "处方管理 ",
+          title: "处方管理",
           type: "menu"
         },
         {
@@ -164,14 +164,14 @@ export default {
           title: "数据统计",
           type: "menu"
         },
-        {
-          children: [],
-          code: "admin/abnormal",
-          icon: "service",
-          id: 2,
-          title: "异常患者",
-          type: "menu"
-        },
+        // {
+        //   children: [],
+        //   code: "admin/abnormal",
+        //   icon: "service",
+        //   id: 2,
+        //   title: "异常患者",
+        //   type: "menu"
+        // },
         {
           children: [],
           code: "admin/patientManager",
@@ -223,8 +223,8 @@ export default {
       return this.$route.name;
     },
     roleId() {
-      return 1;
-    }
+      return localStorage.getItem('roleId');
+    }    
   }
 };
 </script>

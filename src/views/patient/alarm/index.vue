@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import { getMessage } from 'api/doctor'
 export default {
   data() {
     return {
@@ -112,58 +113,7 @@ export default {
           label: "未处理"
         }
       ],
-      list: [
-        {
-          name: "患者1",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "37"
-        },
-        {
-          name: "患者2",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "40"
-        },
-        {
-          name: "患者3",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "40"
-        },
-        {
-          name: "患者4",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "38"
-        },
-        {
-          name: "患者5",
-          sex: "男",
-          mobilePhone: "13655555555",
-          idCard: "522422199800114456",
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "38"
-        }
-      ],
+      list: [],
       form:{},
        rules: {
         status: [
@@ -185,7 +135,15 @@ export default {
       },
     };
   },
+  created(){
+    this.getMessage()
+  },
   methods:{
+    getMessage(){
+       getMessage().then(res=>{
+        this.list = res
+      })
+    },
      // 编辑按钮操作
     handleUpstatus(row) {
       this.dialogFormVisible = true;

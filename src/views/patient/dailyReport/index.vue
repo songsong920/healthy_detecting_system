@@ -31,11 +31,17 @@
             >
           </template>
         </el-table-column>
+         <el-table-column align="center" label="是否异常">
+          <template slot-scope="scope">
+            <span>{{ scope.row.status ?'正常':'异常'}}</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="上报时间">
           <template slot-scope="scope">
             <span>{{ scope.row.date }}</span>
           </template>
         </el-table-column>
+       
       </el-table>
       <div v-show="!listLoading" class="pagination-container">
         <el-pagination
@@ -56,27 +62,21 @@
         width="450px"
       >
         <el-form :model="form" :rules="rules" ref="form" label-width="70px">
-          <el-form-item label="姓名" prop="idCard">
-            <el-input
-              v-model="form.idCard"
-              placeholder="请输入姓名"
-              style="width: 100%"
-              maxlength="15"
-              size="small"
-            ></el-input>
+          <el-form-item label="姓名" prop="pname">
+          <span style="margin-top:4px;display:inline-block">{{roleName}}</span>
           </el-form-item>
-          <el-form-item label="体温" prop="idCard">
+          <el-form-item label="体温" prop="temperature">
             <el-input
-              v-model="form.idCard"
+              v-model="form.temperature"
               placeholder="请输入体温"
               style="width: 100%"
               maxlength="15"
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="脉搏" prop="mobilePhone">
+          <el-form-item label="脉搏" prop="pulse">
             <el-input
-              v-model="form.mobilePhone"
+              v-model="form.pulse"
               placeholder="请输入脉搏"
               style="width: 100%"
               maxlength="11"
@@ -84,9 +84,9 @@
               size="small"
             ></el-input>
           </el-form-item>
-          <el-form-item label="血压" prop="mobilePhone">
+          <el-form-item label="血压" prop="bloodpressure">
             <el-input
-              v-model="form.mobilePhone"
+              v-model="form.bloodpressure"
               placeholder="请输入血压"
               style="width: 100%"
               maxlength="11"
@@ -94,6 +94,17 @@
               size="small"
             ></el-input>
           </el-form-item>
+          <el-form-item label="日期" prop="date">
+          <el-date-picker
+            v-model="form.date"
+            type="date"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
+            placeholder="选择日期"
+            style="width: 100%"
+            size="small"
+          ></el-date-picker>
+        </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="cancel('form')" size="small">取 消</el-button>
@@ -111,30 +122,14 @@
   </div>
 </template>
 
+
 <script>
+import { daily_punchIn,findAllReport
+ } from "api/patient";
 export default {
   data() {
     return {
-      list: [
-        {
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "37"
-        },
-        {
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "37"
-        },
-        {
-          date: "2022-4-25",
-          bloodPressure: "111",
-          pulse: "100",
-          temperature: "37"
-        }
-      ],
+      list: [],
       form: {},
       rules:{},
       total: 0,
@@ -154,9 +149,26 @@ export default {
       tableKey: 0
     };
   },
+   computed: {
+    roleName() {
+      return localStorage.getItem('roleName');
+    },
+    password() {
+      return localStorage.getItem('password');
+    }     
+  },
+  created(){
+    this.getList()
+  },
   methods: {
+    getList(){
+      findAllReport(this.formatParams({pname:this.roleName})).then(res=>{
+        this.list = res
+      })
+    },
     // 数据上报按钮操作
     handleReport(row) {
+      this.form.pname = this.roleName
       this.dialogFormVisible = true;
       this.dialogStatus = "report";
     },
@@ -171,11 +183,13 @@ export default {
     // 编辑
     updateReport(formName) {
       const set = this.$refs;
-      set[formName].valistatus((valid) => {
+      set[formName].validate((valid) => {
         if (valid) {
-          this.loading = true;
-          this.loadingText = "保存中...";
-          // 上报接口
+          daily_punchIn(this.formatParams(this.form)).then(res=>{
+            this.$message.success(res)
+            this.dialogFormVisible = false
+            this.getList()
+          })
         }
       });
     }

@@ -17,10 +17,13 @@ import {
   parseTime,
   resetForm,
   addDateRange,
+  formatParams
 } from "@/utils/common";
 Vue.component('icon-svg', IconSvg)
 Vue.use(ElementUI);
 //全局方法挂载
+
+Vue.prototype.formatParams = formatParams
 Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange

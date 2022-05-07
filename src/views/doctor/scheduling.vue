@@ -27,16 +27,15 @@
                   </th>
                 </tr>
                 <tr
-                  v-for="(schedule, scheduleIndex) in scheduleList"
-                  :key="scheduleIndex"
+                  v-for="(dept, deptIndex) in deptOptions"
+                  :key="deptIndex"
                   style="border: 1px solid #e7e7e7"
                 >
                   <td style="border: 1px solid #e7e7e7;">
-                    <p>{{ schedule.timeName }}</p>
-                    <p class="period">{{ schedule.name }}</p>
+                    <p>{{ dept.dept }}</p>
                   </td>
                   <td
-                    v-for="(item, index) in schedule.list"
+                    v-for="(item, index) in dept.list"
                     :key="item + index"
                     style="border: 1px solid #e7e7e7"
                     class="schedule-list-wrapper"
@@ -67,22 +66,50 @@
         width="520px"
       >
         <el-form :model="form" :rules="rules" ref="form" label-width="90px">
-          <el-form-item label="医生名称" prop="status">
+         
+          <el-form-item label="医生名称" prop="dname">
             <el-select
               class="filter-item"
-              v-model="form.status"
+              v-model="form.dname"
               placeholder="请选择医生"
               style="width: 100%"
               size="small"
             >
               <el-option
-                v-for="item in doctorOptions"
-                :key="item.id"
-                :label="item.label"
-                :value="item.id"
+                v-for="item in docList"
+                :key="item.username"
+                :label="item.username"
+                :value="item.username"
               />
             </el-select>
           </el-form-item>
+          <el-form-item label="所属科室" prop="dept">
+            <el-select
+              class="filter-item"
+              v-model="form.dept"
+              placeholder="请选择科室"
+              style="width: 100%"
+              size="small"
+            >
+              <el-option
+                v-for="item in deptOptions"
+                :key="item.dept"
+                :label="item.dept"
+                :value="item.dept"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="排课日期" prop="date">
+          <el-date-picker
+            v-model="form.date"
+            type="date"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
+            placeholder="选择日期"
+            style="width: 100%"
+            size="small"
+          ></el-date-picker>
+        </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="cancel('form')" size="small">取 消</el-button>
@@ -103,19 +130,12 @@
   </div>
 </template>
 <script>
+import { arrangeDoctor,findallDoctor,deleteDoctor,updateDoctor,showWeeklyRoaster,findAllDept} from "api/admin";
 export default {
   data() {
     return {
-      doctorOptions: [
-        {
-          id: 1,
-          label: "张医生"
-        },
-        {
-          id: 2,
-          label: "李医生"
-        }
-      ],
+      mapList:{},
+      doctorOptions: [],
       weekList: [
         { weekType: "1", value: "周一" },
         { weekType: "2", value: "周二" },
@@ -125,40 +145,15 @@ export default {
         { weekType: "6", value: "周六" },
         { weekType: "7", value: "周日" }
       ],
-      departMentList: [
-        {
-          id: 1,
-          name: "科室1"
-        },
-        {
-          id: 2,
-          name: "科室2"
-        },
-        {
-          id: 3,
-          name: "科室3"
-        },
-        {
-          id: 4,
-          name: "科室4"
-        },
-        {
-          id: 5,
-          name: "科室5"
-        },
-        {
-          id: 6,
-          name: "科室6"
-        }
-      ],
+      deptOptions: [],
       tableData: {
         list: [
           {
-            classTime: "2022-05-03",
-            doctorName: "张三",
+            classTime: "2022-05-03", //日期可以不要
+            doctorName: "张三",  //医生姓名
             id: 1,
-            departId: 3,
-            weekType: "2"
+            departId: 4, //科室id 与科室进行管理
+            weekType: "2" // 周几
           },
           {
             classTime: "2022-05-03",
@@ -189,18 +184,31 @@ export default {
             weekType: "3"
           }
         ],
-        map: {
-          1: "2022-05-02",
-          2: "2022-05-03",
-          3: "2022-05-04",
-          4: "2022-05-05",
-          5: "2022-05-06",
-          6: "2022-05-07",
-          7: "2022-05-08"
-        }
       },
       dialogFormVisible: false,
-      rules: {},
+      rules: {
+        date: [
+          {
+            required: true,
+            message: "日期不能为空",
+            trigger: "blur"
+          }
+        ],
+        dname: [
+          {
+            required: true,
+            message: "请选择医生名称",
+            trigger: "blur"
+          }
+        ],
+        dept: [
+          {
+            required: true,
+            message: "请选择所属科室",
+            trigger: "blur"
+          }
+        ],
+      },
       showTime: new Date(),
       mapList: null,
       loading: false,
@@ -211,36 +219,81 @@ export default {
         create:"新增排班",
         update: "编辑排班"
       },
-      scheduleList: [] //课表
+      scheduleList: [] ,//课表
+      docList:[],
     };
   },
   created() {
-    this.getNowCourList();
+    this.getData()
+    this.getList()
+    this.getDept()
+    this.getMap()
+  },
+  computed: { 
+  roleName() {
+      return localStorage.getItem('roleName');
+    }
   },
   methods: {
-    // 获取当前医生列表
-    getNowCourList() {
-      this.scheduleList = this.handleTableData(this.tableData.list);
-      this.mapList = this.tableData.map;
+    // 处理周一到周日
+    getMap(){
+      var now = new Date();
+      var nowTime = now.getTime() ;
+      var day = now.getDay();
+      var oneDayTime = 24*60*60*1000;
+      var one = nowTime - (day-1)*oneDayTime ;//显示周一
+      var two = nowTime - (2-day)*oneDayTime ;//显示周二
+      var three = nowTime - (3-day)*oneDayTime ;//显示周三
+      var four = nowTime - (4-day)*oneDayTime ;//显示周四
+      var five = nowTime - (5-day)*oneDayTime ;//显示周五
+      var six = nowTime - (6-day)*oneDayTime ;//显示周六
+      var serven =  nowTime + (7-day)*oneDayTime ;//显示周日
+      this.mapList = {
+          1: this.parseTime(new Date(one),'{y}-{m}-{d}'),
+          2: this.parseTime(new Date(two),'{y}-{m}-{d}'),
+          3: this.parseTime(new Date(three),'{y}-{m}-{d}'),
+          4: this.parseTime(new Date(four),'{y}-{m}-{d}'),
+          5: this.parseTime(new Date(five),'{y}-{m}-{d}'),
+          6: this.parseTime(new Date(six),'{y}-{m}-{d}'),
+          7: this.parseTime(new Date(serven),'{y}-{m}-{d}')
+        }
+    },
+    // 获取医生列表
+    getList(){
+      findallDoctor().then(res=>{
+        this.docList = res
+      })
+    },
+    getData(d){
+      showWeeklyRoaster().then(res=>{
+        
+      })
+    },
+    // 查询所有科室
+    getDept(){
+      findAllDept().then(res=>{
+        this.deptOptions = res
+        this.scheduleList = this.handleTableData(this.tableData.list);
+     })
     },
     // 处理表格数据
     handleTableData(scheduleList) {
       if (scheduleList && scheduleList.length) {
-        this.departMentList.forEach((schedule) => {
-          schedule.list = [[], [], [], [], [], [], []];
+        this.deptOptions.forEach((dept) => {
+          dept.list = [[], [], [], [], [], [], []];
           scheduleList.forEach((item) => {
-            if (schedule.id == item.departId) {
+            if (dept.no == item.id) {
               for (var i = 0; i < 7; i++) {
                 if (item.weekType - 1 == i) {
-                  schedule.list[i].push(item);
+                  dept.list[i].push(item);
                 }
               }
             }
           });
         });
       }
-      console.log(this.departMentList);
-      return this.departMentList;
+      console.log(this.deptOptions);
+      return this.deptOptions;
     },
     // 根据时间更新课程表
     handleChangeTime(value) {
@@ -260,19 +313,57 @@ export default {
     cancel(formName) {
       this.dialogFormVisible = false;
     },
+    // 删除排班
+    handleDelete(row) {
+      this.$confirm("确认删除此排班?", "删除排班", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.loading = true;
+        deleteDoctor(this.formatParams(this.form)).then(res=>{
+          if(res == '删除成功'){
+            this.$message.success('删除成功')
+            this.getList()
+            this.loading = false
+          }else{
+            this.loading = false
+            this.$message.error(res)
+          }
+        })
+      });
+    },
+    // 添加
+    create(formusername) {
+      const set = this.$refs;
+      set[formusername].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          arrangeDoctor(this.formatParams(this.form)).then((res) => {
+            if (res == "添加排班成功") {
+              this.loading = false;
+              this.dialogFormVisible = false;
+              this.getList();
+              this.$message.success("添加排班成功");
+            } else {
+              this.loading = false;
+              this.$message.error(res);
+            }
+          });
+        }
+      });
+    },
     //编辑排班信息
     update(formName) {
       const set = this.$refs;
       set[formName].validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.loadingText = "保存中...";
-          updateNowCourse(this.form).then((response) => {
+          updateDoctor(this.formatParams(this.form)).then((response) => {
             this.loading = false;
-            this.loadingText = "确 定";
-            if (response.code == 200) {
-              this.$message.success("排班编辑成功");
-              this.getNowCourList(); //获取课程列表
+            if (res == '编辑排班成功') {
+              this.$message.success("编辑排班成功");
+              this.getList(); //获取课程列表
               this.dialogFormVisible = false;
             } else {
               this.$message.error(response.msg);

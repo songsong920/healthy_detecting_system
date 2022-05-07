@@ -50,7 +50,14 @@ export function resetForm(refName) {
     this.$refs[refName].resetFields();
   }
 }
-
+// JSON格式转拼接
+export function formatParams(data){
+  var arr=[];
+for(var item in data){
+arr.push(item+"="+data[item])
+}
+return	arr.join("&")
+}	
 // 添加日期范围
 export function addDateRange(params, dateRange) {
   var search = params;

@@ -9,7 +9,7 @@
         ></hamburger>
         <tags ref="child"></tags>
         <div class="avatar-container" style="height: 56px">
-          <span class="name">欢迎您，××角色</span>
+          <span class="name">欢迎您，{{roleName}}</span>
         </div>
         <div @click="logout" class="loginOut">
           <img
@@ -44,6 +44,9 @@ export default {
     };
   },
   computed: { ...mapGetters(["sidebar", "name", "avatar"]),
+  roleName() {
+      return localStorage.getItem('roleName');
+    }
   },
   methods: {
     toggleSideBar() {

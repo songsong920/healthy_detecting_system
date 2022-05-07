@@ -10,14 +10,13 @@
       <div class="account-login-page">
         <div class="loginWapper">
           <div class="school-header">病人健康状态监测系统</div>
-          <el-form-item prop="'mobilePhone" class="username">
+          <el-form-item prop="'name" class="username">
             <el-input
               name="username"
               type="text"
-              v-model.trim="loginForm.mobilePhone"
-              @input="changePhone"
+              v-model.trim="loginForm.name"
+              @input="changName"
               @keyup.enter.native="handleLogin"
-              onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
               placeholder="请输入账号"
               clearable
               :maxlength="20"
@@ -30,7 +29,6 @@
               @keyup.enter.native="handleLogin"
               v-model.trim="loginForm.password"
               clearable
-              onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
               placeholder="请输入密码"
               :maxlength="16"
               show-password
@@ -49,20 +47,20 @@
 </template>
 <script>
 // 从api/login中引入登录接口
-import {loginByPhone} from 'api/login'
+import { login, login1 } from "api/login";
 export default {
   name: "login",
   data() {
     return {
       loginForm: {
-        mobilePhone: "",
+        name: "",
         password: ""
       },
       loginRules: {
-        mobilePhone: [
+        name: [
           {
             required: true,
-            message: "手机号不能为空",
+            message: "用户名不能为空",
             trigger: "blur"
           }
         ],
@@ -80,7 +78,7 @@ export default {
   },
   methods: {
     // 监听输入框内容变化
-    changePhone(val) {
+    changName(val) {
       if (val == "") {
         this.loginForm.password = "";
       }
@@ -90,31 +88,24 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          //#region 
-          let { mobilePhone, password } = this.loginForm;
-          if (mobilePhone && password) {
-            this.loading = false;
-            localStorage.setItem("roleId", 3);
-            this.$router.replace({
-               path: "/"
-             });
-          }
-          //#endregion
-
-           //  满足条件调用login接口
-            // loginByPhone(this.loginForm).then(res=>{
-            //   //如果code或者其他状态200 代表成功，返回结果
-            //   if(res.code == 200){
-            //     // 存登录用户信息
-            //     localStorage.setItem("roleId", 1);
-            //     this.$router.replace({
-            //    path: "/"
-            //  });
-            //  this.$message.success('登录成功')
-            //   }else{
-            //     this.$message.error(res.msg)
-            //   }
-            // })
+          this.loadingText = "登录中...";
+          login(this.formatParams(this.loginForm)).then((res) => {
+            if (res == 1 || res == 2 || res == 3) {
+              this.loading = false;
+              this.loadingText = "登 录";
+              localStorage.setItem("roleId", res);
+              localStorage.setItem('roleName',this.loginForm.name)
+              localStorage.setItem('password',this.loginForm.password)
+              this.$router.replace({
+                path: "/"
+              });
+              this.$message.success("登录成功");
+            } else {
+              this.loading = false;
+              this.loadingText = "登 录";
+              this.$message.error("登录失败，请检查账户或密码是否正确");
+            }
+          });
         }
       });
     },

@@ -115,7 +115,7 @@ export const constantRouterMap = [{
     {
       path: 'myDoctor',
       component: _import('doctor/myDoctor'),
-      name: '医生栏目',
+      name: '我的医生',
     },
     {
       path: 'doctorSelect',
